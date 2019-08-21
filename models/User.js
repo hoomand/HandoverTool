@@ -10,8 +10,9 @@ const userSchema = new Schema(
       type: "String",
       hashKey: true
     },
-    email: {
-      type: String
+    password: {
+      type: String,
+      required: true
     },
     creationDate: {
       type: Date

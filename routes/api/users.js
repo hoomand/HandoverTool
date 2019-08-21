@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../../models/User");
-const isEmpty = require("../../validation/is-empty");
+const bcrypt = require("bcryptjs");
+const validateRegisterInput = require("../../validation/register");
 
 const router = express.Router();
 
@@ -13,22 +14,33 @@ router.get("/test", (req, res) => res.json({ msg: "users work!" }));
 // @desc    Register user
 // @access  Public
 router.post("/register", (req, res) => {
-  const { alias, email } = req.body;
-  console.log(`alias is: ${alias}`);
+  const { errors, isValid } = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
+  const { alias, password } = req.body;
   User.get({ alias }, (err, existingUser) => {
-    if (!isEmpty(err)) {
-      return res.status(500).json({ database: "error in database operation" });
-    }
     if (existingUser !== undefined) {
       return res.status(400).json({ alias: "alias already exists" });
     }
 
     const newUser = new User({
       alias,
-      email
+      password
     });
-    newUser.save().then(user => res.json(user));
+
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+        // Finally saving newUser object using mongoose!
+        newUser
+          .save()
+          .then(user => res.json(user))
+          .catch(err => console.error(err));
+      });
+    });
   });
 });
 
