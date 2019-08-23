@@ -1,7 +1,9 @@
 const express = require("express");
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
 
 const router = express.Router();
 
@@ -40,6 +42,39 @@ router.post("/register", (req, res) => {
           .then(user => res.json(user))
           .catch(err => console.error(err));
       });
+    });
+  });
+});
+
+// @route   POST api/users/login
+// @desc    Login user & returning JWT token
+// @access  Public
+router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const { alias, password } = req.body;
+  User.get({ alias }, (err, user) => {
+    if (!user) {
+      errors.alias = "Alias not found";
+      return res.status(400).json(errors);
+    }
+
+    // check password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        // successful login
+        const payload = { alias: user.alias };
+        jwt.sign(payload, "secret", { expiresIn: 3600 }, (err, token) => {
+          res.json({ success: true, token: `Bearer ${token}` });
+        });
+      } else {
+        errors.password = "Password incorrect";
+        return res.status(400).json(errors);
+      }
     });
   });
 });
