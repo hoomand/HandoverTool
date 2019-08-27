@@ -4,7 +4,9 @@
   "description": "Handover Tool for easier handover of tickets or issues at the end of a shift",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test jest",
+    "test:coverage": "NODE_ENV=test jest --coverage",
+    "test:watch": "NODE_ENV=test jest --watch",
     "start": "node server.js",
     "server": "nodemon server.js"
   },
