@@ -96,3 +96,29 @@ describe("POST /api/users/register", () => {
     expect(successResponse.statusCode).toBe(200);
   });
 });
+
+describe("POST /api/users/login", () => {
+  beforeEach(async () => {
+    const newUser = new User({
+      alias: "bijan",
+      password: "$2a$10$XwnrAPIH1jzK7PITSqeckesK3O6VhjstdPPOyArCyCkzbCrtPP/mG"
+    });
+    await newUser.save();
+  });
+  afterEach(async () => {
+    await User.batchDelete([{ alias: "bijan" }], err => {
+      if (err) {
+        console.log("Couldn't flush the test database");
+        console.log(err);
+        return;
+      }
+    });
+  });
+
+  test("It should successfully login with a valid user/password", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .send({ alias: "bijan", password: "oohoomhoom" });
+    expect(response.statusCode).toBe(200);
+  });
+});
