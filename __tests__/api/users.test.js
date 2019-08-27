@@ -1,11 +1,25 @@
-// we will use supertest to test HTTP requests/responses
 const request = require("supertest");
-// we also need our app for the correct routes!
 const app = require("../../app");
+const User = require("../../models/User");
 const appConfigs = require("../../config/app");
 const randomText = require("../../utils");
 
+process.env.NODE_ENV = "test";
 describe("POST /api/users/register", () => {
+  afterEach(async () => {
+    // Flush the User table of test items
+    // Dynamoose does not have a table delete or flush functionality (http://bit.ly/30LSptj),
+    // consequently we have to delete every single record we insert in db in here
+    // Todo: Try deleteTable module: https://stackoverflow.com/questions/48674431/how-to-delete-a-table-using-dynamoose
+    await User.batchDelete([{ alias: "me@myself.com" }], err => {
+      if (err) {
+        console.log("Couldn't flush the test database");
+        console.log(err);
+        return;
+      }
+    });
+  });
+
   test("It should fail to register a user without any values", async () => {
     appConfigs.aliasIsEmail = false;
 

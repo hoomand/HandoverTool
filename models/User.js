@@ -1,7 +1,5 @@
-const dynamoose = require("dynamoose");
-// TODO: read env to decide if it's local or not
-dynamoose.local("http://localhost:8000");
-const Schema = dynamoose.Schema;
+const db = require("../db");
+const Schema = db.Schema;
 
 const throughput = require("../config/dynamo").throughput;
 const userSchema = new Schema(
@@ -23,4 +21,4 @@ const userSchema = new Schema(
   }
 );
 
-module.exports = User = dynamoose.model("User", userSchema);
+module.exports = User = db.model("User", userSchema);
