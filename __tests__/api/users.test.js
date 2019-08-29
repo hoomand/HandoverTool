@@ -136,6 +136,26 @@ describe("POST /api/users/login", () => {
     });
   });
 
+  test("It should fail if no alias specified", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .send({ password: "somePassword" });
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({
+      alias: "Alias field is required"
+    });
+  });
+
+  test("It should fail if no password specified", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .send({ alias: "joosh" });
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({
+      password: "Password field is required"
+    });
+  });
+
   test("It should fail to login for an invalid alias", async () => {
     const response = await request(app)
       .post("/api/users/login")
