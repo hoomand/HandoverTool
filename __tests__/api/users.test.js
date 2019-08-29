@@ -116,10 +116,33 @@ describe("POST /api/users/login", () => {
     });
   });
 
+  test("It should fail to login for an invalid alias", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .send({ alias: "someInValidUser", password: "somePassword" });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({
+      alias: "Alias not found"
+    });
+  });
+
+  test("It should fail to login for a wrong password", async () => {
+    const response = await request(app)
+      .post("/api/users/login")
+      .send({ alias: "bijan", password: "badPassword" });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({
+      password: "Password incorrect"
+    });
+  });
+
   test("It should successfully login with a valid user/password", async () => {
     const response = await request(app)
       .post("/api/users/login")
       .send({ alias: "bijan", password: "oohoomhoom" });
     expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("success", true);
   });
 });
