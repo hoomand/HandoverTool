@@ -11,13 +11,16 @@ describe("POST /api/users/register", () => {
     // Dynamoose does not have a table delete or flush functionality (http://bit.ly/30LSptj),
     // consequently we have to delete every single record we insert in db in here
     // Todo: Try deleteTable module: https://stackoverflow.com/questions/48674431/how-to-delete-a-table-using-dynamoose
-    await User.batchDelete([{ alias: "me@myself.com" }], err => {
-      if (err) {
-        console.log("Couldn't flush the test database");
-        console.log(err);
-        return;
+    await User.batchDelete(
+      [{ alias: "me@myself.com" }, { alias: "faeze" }],
+      err => {
+        if (err) {
+          console.log("Couldn't flush the test database");
+          console.log(err);
+          return;
+        }
       }
-    });
+    );
   });
 
   test("It should fail to register a user without any values", async () => {
@@ -28,6 +31,23 @@ describe("POST /api/users/register", () => {
     expect(response.body).toEqual({
       alias: "Alias must be between 3 and 30 characters",
       password: "Password must be between 8 to 50 characters long"
+    });
+  });
+
+  test("It should fail to register an alias that already exists", async () => {
+    appConfigs.aliasIsEmail = false;
+
+    await request(app)
+      .post("/api/users/register")
+      .send({ alias: "faeze", password: "something_random" });
+
+    const repeatedRequestReponse = await request(app)
+      .post("/api/users/register")
+      .send({ alias: "faeze", password: "something_random" });
+
+    expect(repeatedRequestReponse.statusCode).toBe(400);
+    expect(repeatedRequestReponse.body).toEqual({
+      alias: "alias already exists"
     });
   });
 
