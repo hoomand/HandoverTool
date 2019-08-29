@@ -98,15 +98,16 @@ describe("POST /api/users/register", () => {
 });
 
 describe("POST /api/users/login", () => {
-  beforeEach(async () => {
+  beforeAll(() => {
     const newUser = new User({
       alias: "bijan",
       password: "$2a$10$XwnrAPIH1jzK7PITSqeckesK3O6VhjstdPPOyArCyCkzbCrtPP/mG"
     });
-    await newUser.save();
+    newUser.save();
   });
-  afterEach(async () => {
-    await User.batchDelete([{ alias: "bijan" }], err => {
+
+  afterAll(() => {
+    User.batchDelete([{ alias: "bijan" }], err => {
       if (err) {
         console.log("Couldn't flush the test database");
         console.log(err);
