@@ -4,7 +4,6 @@ const User = require("../../models/User");
 const appConfigs = require("../../config/app");
 const randomText = require("../../utils");
 
-process.env.NODE_ENV = "test";
 describe("POST /api/users/register", () => {
   afterEach(async () => {
     // Flush the User table of test items
