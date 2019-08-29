@@ -12,6 +12,12 @@
   },
   "author": "bijan hoomand",
   "license": "GPL-3.0-or-later",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -23,6 +29,7 @@
     "validator": "^11.1.0"
   },
   "devDependencies": {
+    "husky": "^3.0.4",
     "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
