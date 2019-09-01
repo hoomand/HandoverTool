@@ -26,11 +26,11 @@ describe("POST /api/users/register", () => {
     appConfigs.aliasIsEmail = false;
 
     const response = await request(app).post("/api/users/register");
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       alias: "Alias must be between 3 and 30 characters",
       password: "Password must be between 8 to 50 characters long"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail to register an alias that already exists", async () => {
@@ -44,10 +44,10 @@ describe("POST /api/users/register", () => {
       .post("/api/users/register")
       .send({ alias: "faeze", password: "something_random" });
 
-    expect(repeatedRequestReponse.statusCode).toBe(400);
     expect(repeatedRequestReponse.body).toEqual({
       alias: "alias already exists"
     });
+    expect(repeatedRequestReponse.statusCode).toBe(400);
   });
 
   test("It should fail for an alias shorter than 3 characters", async () => {
@@ -56,10 +56,10 @@ describe("POST /api/users/register", () => {
     const response = await request(app)
       .post("/api/users/register")
       .send({ alias: "bb", password: "something_random" });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       alias: "Alias must be between 3 and 30 characters"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail for an alias longer than 30 characters", async () => {
@@ -68,10 +68,10 @@ describe("POST /api/users/register", () => {
     const response = await request(app)
       .post("/api/users/register")
       .send({ alias: randomText(31), password: "something_random" });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       alias: "Alias must be between 3 and 30 characters"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail for a password shorter than 8 characters", async () => {
@@ -80,10 +80,10 @@ describe("POST /api/users/register", () => {
     const response = await request(app)
       .post("/api/users/register")
       .send({ alias: "abcd", password: randomText(7) });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       password: "Password must be between 8 to 50 characters long"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail for a password longer than 50 characters", async () => {
@@ -92,10 +92,10 @@ describe("POST /api/users/register", () => {
     const response = await request(app)
       .post("/api/users/register")
       .send({ alias: "abcd", password: randomText(51) });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       password: "Password must be between 8 to 50 characters long"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should only accept an email address for alias if appConfig.aliasIsEmail is set to true", async () => {
@@ -139,20 +139,20 @@ describe("POST /api/users/login", () => {
     const response = await request(app)
       .post("/api/users/login")
       .send({ password: "somePassword" });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       alias: "Alias field is required"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail if no password specified", async () => {
     const response = await request(app)
       .post("/api/users/login")
       .send({ alias: "joosh" });
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       password: "Password field is required"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail to login for an invalid alias", async () => {
@@ -160,10 +160,10 @@ describe("POST /api/users/login", () => {
       .post("/api/users/login")
       .send({ alias: "someInValidUser", password: "somePassword" });
 
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       alias: "Alias not found"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should fail to login for a wrong password", async () => {
@@ -171,17 +171,17 @@ describe("POST /api/users/login", () => {
       .post("/api/users/login")
       .send({ alias: "bijan", password: "badPassword" });
 
-    expect(response.statusCode).toBe(400);
     expect(response.body).toEqual({
       password: "Password incorrect"
     });
+    expect(response.statusCode).toBe(400);
   });
 
   test("It should successfully login with a valid user/password", async () => {
     const response = await request(app)
       .post("/api/users/login")
       .send({ alias: "bijan", password: "oohoomhoom" });
-    expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty("success", true);
+    expect(response.statusCode).toBe(200);
   });
 });
