@@ -2,14 +2,7 @@ const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User");
 const Team = require("../../models/Team");
-
-const loginUser = async (alias, password) => {
-  const loginResponse = await request(app)
-    .post("/api/users/login")
-    .send({ alias, password });
-
-  return loginResponse.body.token;
-};
+const loginUser = require("../utils");
 
 describe("POST /api/teams", () => {
   beforeAll(() => {
