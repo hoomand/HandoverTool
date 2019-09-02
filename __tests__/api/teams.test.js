@@ -2,42 +2,34 @@ const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User");
 const Team = require("../../models/Team");
-const loginUser = require("../utils");
+const { createUser, loginUser } = require("../utils");
 const randomText = require("../../utils");
 
-describe("POST /api/teams", () => {
-  beforeAll(() => {
-    const newUser = new User({
-      alias: "bijan",
-      password: "$2a$10$XwnrAPIH1jzK7PITSqeckesK3O6VhjstdPPOyArCyCkzbCrtPP/mG"
-    });
-    newUser.save();
+let test_user1 = {
+  alias: "babak",
+  password: randomText(10),
+  token: ""
+};
 
-    // const newTeam = new Team({
-    //   name: "Sydney Reds",
-    //   created_by_alias: "bijan"
-    // });
-    // newTeam.save();
+describe("POST /api/teams", () => {
+  beforeAll(async () => {
+    const { alias, password } = test_user1;
+    await createUser(alias, password);
+    test_user1.token = await loginUser(alias, password);
+
+    const newTeam = new Team({
+      name: "Sydney Reds",
+      created_by_alias: alias
+    });
+    await newTeam.save();
   });
 
-  afterAll(() => {
-    User.batchDelete([{ alias: "bijan" }], err => {
-      if (err) {
-        console.log("Couldn't flush the Users test database");
-        console.log(err);
-        return;
-      }
-    });
-    Team.batchDelete(
-      [{ name: "Seattle Blues" }, { name: "Sydney Reds" }],
-      err => {
-        if (err) {
-          console.log("Couldn't flush the Teams test database");
-          console.log(err);
-          return;
-        }
-      }
-    );
+  afterAll(async () => {
+    await User.batchDelete([{ alias: test_user1.alias }]);
+    await Team.batchDelete([
+      { name: "Seattle Blues" },
+      { name: "Sydney Reds" }
+    ]);
   });
 
   test("It should fail to create new team without authentication token", async () => {
@@ -45,7 +37,7 @@ describe("POST /api/teams", () => {
       .post("/api/teams")
       .send({
         name: "Seattle Blues",
-        created_by_alias: "bijan"
+        created_by_alias: test_user1.alias
       });
 
     expect(response.text).toEqual("Unauthorized");
@@ -53,14 +45,12 @@ describe("POST /api/teams", () => {
   });
 
   test("It should fail creating a new team without team name", async () => {
-    const token = await loginUser("bijan", "oohoomhoom");
-
     const response = await request(app)
       .post("/api/teams")
       .send({})
       .set({
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: token
+        Authorization: test_user1.token
       });
 
     expect(response.body).toEqual({
@@ -70,7 +60,7 @@ describe("POST /api/teams", () => {
   });
 
   test("It should fail creating a new team with a name less than 3 characters long", async () => {
-    const token = await loginUser("bijan", "oohoomhoom");
+    const { token } = test_user1;
 
     const response = await request(app)
       .post("/api/teams")
@@ -87,7 +77,7 @@ describe("POST /api/teams", () => {
   });
 
   test("It should fail creating a new team with a name greater than 30 characters long", async () => {
-    const token = await loginUser("bijan", "oohoomhoom");
+    const { token } = test_user1;
 
     const response = await request(app)
       .post("/api/teams")
@@ -103,8 +93,34 @@ describe("POST /api/teams", () => {
     expect(response.statusCode).toBe(400);
   });
 
+  test("It should fail creating a new team with a name that already exists", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/teams")
+      .send({
+        name: "Sydney Reds"
+      })
+      .set({
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: token
+      });
+
+    const duplicateResponse = await request(app)
+      .post("/api/teams")
+      .send({ name: "Sydney Reds" })
+      .set({
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: token
+      });
+
+    expect(duplicateResponse.statusCode).toBe(400);
+    expect(duplicateResponse.body).toEqual({
+      name: "team already exists"
+    });
+  });
+
   test("It should successfully create a new team", async () => {
-    const token = await loginUser("bijan", "oohoomhoom");
+    const { token } = test_user1;
 
     const response = await request(app)
       .post("/api/teams")
@@ -118,7 +134,7 @@ describe("POST /api/teams", () => {
 
     expect(response.body).toEqual({
       name: "Seattle Blues",
-      created_by_alias: "bijan"
+      created_by_alias: test_user1.alias
     });
     expect(response.statusCode).toBe(200);
   });
