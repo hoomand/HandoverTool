@@ -75,4 +75,24 @@ router.post("/login", (req, res) => {
   });
 });
 
+// @route   GET api/users
+// @desc    Get all users
+// @access  Public
+router.get("/", (req, res) => {
+  User.scan().exec((err, users) => {
+    const aliases = users.map(user => user.alias);
+    res.json({ users: aliases.sort() });
+  });
+});
+
+// @route   GET api/users/:alias
+// @desc    Get user by alias
+// @access  Public
+router.get("/:alias", (req, res) => {
+  User.scan({ alias: req.params.alias }).exec((err, users) => {
+    const aliases = users.map(user => user.alias);
+    res.json({ users: aliases.sort() });
+  });
+});
+
 module.exports = router;

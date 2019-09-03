@@ -10,13 +10,41 @@ const test_user1 = {
   password: randomText(10)
 };
 
+const test_user2 = {
+  alias: "users_test_user2",
+  password: randomText(10)
+};
+
 beforeAll(async () => {
   const { alias, password } = test_user1;
-  console.log(`creating alias ${alias} with password ${password}`);
   await createUser(alias, password);
+  await createUser(test_user2.alias, test_user2.password);
 });
+
 afterAll(async () => {
-  await User.batchDelete([{ alias: test_user1.alias }]);
+  await User.batchDelete([
+    { alias: test_user1.alias },
+    { alias: test_user2.alias }
+  ]);
+});
+
+describe("GET /api/users", () => {
+  test("It should get all existing users", async () => {
+    const response = await request(app).get("/api/users");
+    console.log("response", response.body);
+    expect(response.body).toHaveProperty("users");
+    expect(response.body.users).toContain("users_test_user");
+    expect(response.body.users).toContain("users_test_user2");
+    expect(response.statusCode).toBe(200);
+  });
+
+  test("It should get the requested user", async () => {
+    const response = await request(app).get("/api/users/users_test_user2");
+    expect(response.body).toEqual({
+      users: ["users_test_user2"]
+    });
+    expect(response.statusCode).toBe(200);
+  });
 });
 
 describe("POST /api/users/register", () => {

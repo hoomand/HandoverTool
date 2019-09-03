@@ -37,4 +37,22 @@ router.post(
   }
 );
 
+// @route   GET api/teams
+// @desc    Get all teams
+// @access  Public
+router.get("/", (req, res) => {
+  Team.scan().exec((err, teams) => {
+    res.json({ teams });
+  });
+});
+
+// @route   GET api/teams/:name
+// @desc    Get team by name
+// @access  Public
+router.get("/:name", (req, res) => {
+  Team.scan({ name: req.params.name }).exec((err, teams) => {
+    res.json({ teams });
+  });
+});
+
 module.exports = router;
