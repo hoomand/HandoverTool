@@ -6,7 +6,7 @@ const { createUser, loginUser } = require("../utils");
 const randomText = require("../../utils");
 
 let test_user1 = {
-  alias: "babak",
+  alias: "team_test_user",
   password: randomText(10),
   token: ""
 };

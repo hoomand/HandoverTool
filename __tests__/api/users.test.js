@@ -2,7 +2,22 @@ const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User");
 const appConfigs = require("../../config/app");
+const { createUser, loginUser } = require("../utils");
 const randomText = require("../../utils");
+
+const test_user1 = {
+  alias: "users_test_user",
+  password: randomText(10)
+};
+
+beforeAll(async () => {
+  const { alias, password } = test_user1;
+  console.log(`creating alias ${alias} with password ${password}`);
+  await createUser(alias, password);
+});
+afterAll(async () => {
+  await User.batchDelete([{ alias: test_user1.alias }]);
+});
 
 describe("POST /api/users/register", () => {
   afterEach(async () => {
@@ -36,13 +51,14 @@ describe("POST /api/users/register", () => {
   test("It should fail to register an alias that already exists", async () => {
     appConfigs.aliasIsEmail = false;
 
+    const { alias, password } = test_user1;
     await request(app)
       .post("/api/users/register")
-      .send({ alias: "faeze", password: "something_random" });
+      .send({ alias, password });
 
     const repeatedRequestReponse = await request(app)
       .post("/api/users/register")
-      .send({ alias: "faeze", password: "something_random" });
+      .send({ alias, password });
 
     expect(repeatedRequestReponse.body).toEqual({
       alias: "alias already exists"
@@ -117,24 +133,6 @@ describe("POST /api/users/register", () => {
 });
 
 describe("POST /api/users/login", () => {
-  beforeAll(() => {
-    const newUser = new User({
-      alias: "bijan",
-      password: "$2a$10$XwnrAPIH1jzK7PITSqeckesK3O6VhjstdPPOyArCyCkzbCrtPP/mG"
-    });
-    newUser.save();
-  });
-
-  afterAll(() => {
-    User.batchDelete([{ alias: "bijan" }], err => {
-      if (err) {
-        console.log("Couldn't flush the test database");
-        console.log(err);
-        return;
-      }
-    });
-  });
-
   test("It should fail if no alias specified", async () => {
     const response = await request(app)
       .post("/api/users/login")
@@ -169,7 +167,7 @@ describe("POST /api/users/login", () => {
   test("It should fail to login for a wrong password", async () => {
     const response = await request(app)
       .post("/api/users/login")
-      .send({ alias: "bijan", password: "badPassword" });
+      .send({ alias: test_user1.alias, password: "badPassword" });
 
     expect(response.body).toEqual({
       password: "Password incorrect"
@@ -178,9 +176,10 @@ describe("POST /api/users/login", () => {
   });
 
   test("It should successfully login with a valid user/password", async () => {
+    const { alias, password } = test_user1;
     const response = await request(app)
       .post("/api/users/login")
-      .send({ alias: "bijan", password: "oohoomhoom" });
+      .send({ alias, password });
     expect(response.body).toHaveProperty("success", true);
     expect(response.statusCode).toBe(200);
   });
