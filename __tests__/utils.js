@@ -16,4 +16,16 @@ const loginUser = async (alias, password) => {
   return loginResponse.body.token;
 };
 
-module.exports = { loginUser, createUser };
+const createTeam = async (name, creator_user_token) => {
+  const newTeam = await request(app)
+    .post("/api/teams")
+    .send({ name })
+    .set({
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: creator_user_token
+    });
+
+  return newTeam;
+};
+
+module.exports = { loginUser, createUser, createTeam };
