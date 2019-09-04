@@ -31,7 +31,6 @@ afterAll(async () => {
 describe("GET /api/users", () => {
   test("It should get all existing users", async () => {
     const response = await request(app).get("/api/users");
-    console.log("response", response.body);
     expect(response.body).toHaveProperty("users");
     expect(response.body.users).toContain("users_test_user");
     expect(response.body.users).toContain("users_test_user2");

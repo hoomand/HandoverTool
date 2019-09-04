@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User");
 const Team = require("../../models/Team");
-const { createUser, loginUser } = require("../utils");
+const { createUser, loginUser, createTeam } = require("../utils");
 const randomText = require("../../utils");
 
 let test_user1 = {
@@ -11,24 +11,37 @@ let test_user1 = {
   token: ""
 };
 
+let test_user2 = {
+  alias: "team_test_user2",
+  password: randomText(10),
+  token: ""
+};
+
+const test_teams = [{ name: "test_team_1" }, { name: "test_team_2" }];
+
 describe("POST /api/teams", () => {
   beforeAll(async () => {
     const { alias, password } = test_user1;
     await createUser(alias, password);
     test_user1.token = await loginUser(alias, password);
 
-    const newTeam = new Team({
-      name: "Sydney Reds",
-      created_by_alias: alias
-    });
-    await newTeam.save();
+    const { alias: alias2, password: password2 } = test_user2;
+    await createUser(alias2, password2);
+    test_user2.token = await loginUser(alias2, password2);
+
+    await createTeam(test_teams[0].name, test_user1.token);
+    await createTeam(test_teams[1].name, test_user2.token);
   });
 
   afterAll(async () => {
-    await User.batchDelete([{ alias: test_user1.alias }]);
+    await User.batchDelete([
+      { alias: test_user1.alias },
+      { alias: test_user2.alias }
+    ]);
     await Team.batchDelete([
       { name: "Seattle Blues" },
-      { name: "Sydney Reds" }
+      { name: test_teams[0].name },
+      { name: test_teams[1].name }
     ]);
   });
 
@@ -36,8 +49,7 @@ describe("POST /api/teams", () => {
     const response = await request(app)
       .post("/api/teams")
       .send({
-        name: "Seattle Blues",
-        created_by_alias: test_user1.alias
+        name: test_teams[0].name
       });
 
     expect(response.text).toEqual("Unauthorized");
@@ -95,19 +107,9 @@ describe("POST /api/teams", () => {
 
   test("It should fail creating a new team with a name that already exists", async () => {
     const { token } = test_user1;
-    const response = await request(app)
-      .post("/api/teams")
-      .send({
-        name: "Sydney Reds"
-      })
-      .set({
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: token
-      });
-
     const duplicateResponse = await request(app)
       .post("/api/teams")
-      .send({ name: "Sydney Reds" })
+      .send({ name: test_teams[0].name })
       .set({
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: token
