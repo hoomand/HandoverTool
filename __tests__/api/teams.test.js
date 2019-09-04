@@ -19,32 +19,61 @@ let test_user2 = {
 
 const test_teams = [{ name: "test_team_1" }, { name: "test_team_2" }];
 
+beforeAll(async () => {
+  const { alias, password } = test_user1;
+  await createUser(alias, password);
+  test_user1.token = await loginUser(alias, password);
+
+  const { alias: alias2, password: password2 } = test_user2;
+  await createUser(alias2, password2);
+  test_user2.token = await loginUser(alias2, password2);
+
+  await createTeam(test_teams[0].name, test_user1.token);
+  await createTeam(test_teams[1].name, test_user2.token);
+});
+
+afterAll(async () => {
+  await User.batchDelete([
+    { alias: test_user1.alias },
+    { alias: test_user2.alias }
+  ]);
+  await Team.batchDelete([
+    { name: "Seattle Blues" },
+    { name: test_teams[0].name },
+    { name: test_teams[1].name }
+  ]);
+});
+
+describe("GET /api/teams", () => {
+  test("It should return existing teams", async () => {
+    const response = await request(app).get("/api/teams");
+
+    expect(response.body).toHaveProperty("teams");
+    expect(response.body.teams).toContainEqual({
+      name: test_teams[0].name,
+      created_by_alias: test_user1.alias
+    });
+    expect(response.body.teams).toContainEqual({
+      name: test_teams[1].name,
+      created_by_alias: test_user2.alias
+    });
+    expect(response.statusCode).toBe(200);
+  });
+  test("It should fetch a team by name", async () => {
+    const response = await request(app).get(`/api/teams/${test_teams[0].name}`);
+
+    expect(response.body).toHaveProperty("teams");
+    expect(response.body.teams).toEqual([
+      {
+        name: test_teams[0].name,
+        created_by_alias: test_user1.alias
+      }
+    ]);
+    expect(response.statusCode).toBe(200);
+  });
+});
+
 describe("POST /api/teams", () => {
-  beforeAll(async () => {
-    const { alias, password } = test_user1;
-    await createUser(alias, password);
-    test_user1.token = await loginUser(alias, password);
-
-    const { alias: alias2, password: password2 } = test_user2;
-    await createUser(alias2, password2);
-    test_user2.token = await loginUser(alias2, password2);
-
-    await createTeam(test_teams[0].name, test_user1.token);
-    await createTeam(test_teams[1].name, test_user2.token);
-  });
-
-  afterAll(async () => {
-    await User.batchDelete([
-      { alias: test_user1.alias },
-      { alias: test_user2.alias }
-    ]);
-    await Team.batchDelete([
-      { name: "Seattle Blues" },
-      { name: test_teams[0].name },
-      { name: test_teams[1].name }
-    ]);
-  });
-
   test("It should fail to create new team without authentication token", async () => {
     const response = await request(app)
       .post("/api/teams")
