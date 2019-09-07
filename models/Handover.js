@@ -10,16 +10,37 @@ const handoverSchema = new Schema(
       hashKey: true,
       default: shortId.generate
     },
-    alias: {
+    userAlias: {
       type: String,
       required: true
     },
     entryDate: {
-      type: Date,
+      type: Number,
       rangeKey: true
+    },
+    handingOverTeam: {
+      type: String,
+      required: true
+    },
+    handedOverTeam: {
+      type: String,
+      required: true
+    },
+    items: {
+      type: "list",
+      list: [
+        {
+          action: String,
+          link: String,
+          description: String
+        }
+      ]
     }
   },
-  { throughput }
+  {
+    throughput,
+    timestamps: { createdAt: "entryDate", updatedAt: "updated_at" }
+  }
 );
 
 module.exports = Handover = db.model("Handover", handoverSchema);
