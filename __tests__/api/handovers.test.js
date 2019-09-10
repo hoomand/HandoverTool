@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User");
 const Team = require("../../models/Team");
+const Handover = require("../../models/Handover");
 const { createUser, loginUser, createTeam } = require("../utils");
 const randomText = require("../../utils");
 
@@ -28,7 +29,18 @@ afterAll(async () => {
     { name: test_teams[0].name },
     { name: test_teams[1].name }
   ]);
+  await deleteAllTestHandovers();
 });
+
+deleteAllTestHandovers = () => {
+  Handover.scan().exec(async (err, handovers) => {
+    picked = [];
+    handovers.forEach(({ id, entryDate }) => {
+      picked.push({ id, entryDate });
+    });
+    await Handover.batchDelete(picked);
+  });
+};
 
 describe("POST /api/handovers", () => {
   test("It should fail creating new handover without authentication", async () => {
