@@ -3,7 +3,7 @@ const app = require("../../app");
 const User = require("../../models/User");
 const appConfigs = require("../../config/app");
 const { createUser, loginUser } = require("../utils");
-const randomText = require("../../utils");
+const { randomText } = require("../../utils");
 
 const test_user1 = {
   alias: "users_test_user",

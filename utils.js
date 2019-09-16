@@ -9,4 +9,8 @@ const randomText = length => {
   return result;
 };
 
-module.exports = randomText;
+const isObject = item => {
+  return typeof item === "object" && !Array.isArray(item) && item !== null;
+};
+
+module.exports = { randomText, isObject };
