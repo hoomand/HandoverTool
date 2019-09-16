@@ -2,7 +2,7 @@ const express = require("express");
 const Team = require("../../models/Team");
 const Handover = require("../../models/Handover");
 const passport = require("passport");
-const validateTeamInput = require("../../validation/team");
+const validateHandoverInput = require("../../validation/handover");
 
 const router = express.Router();
 
@@ -18,6 +18,11 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateHandoverInput(req.body, req.user);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     const { handingOverTeam, handedOverTeam, items } = req.body;
     Team.get({ name: handingOverTeam }, (err, sourceTeam) => {
       if (sourceTeam === undefined) {
