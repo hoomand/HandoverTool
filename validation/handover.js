@@ -1,6 +1,7 @@
 const isEmpty = require("./is-empty");
 const { isObject } = require("../utils");
 const Validator = require("validator");
+const Team = require("../models/Team");
 const { handoverItem: handOverConfigs } = require("../config/app");
 
 module.exports = function validateHandoverInput(data, user) {
@@ -16,18 +17,31 @@ module.exports = function validateHandoverInput(data, user) {
 
   const handedOverItems = !isEmpty(data.items) ? data.items : "";
 
-  if (Validator.isEmpty(userAlias)) {
+  if (isEmpty(errors) && Validator.isEmpty(userAlias)) {
     errors.userAlias = "Oncall alias is required";
   }
-  if (Validator.isEmpty(handingOverTeam)) {
+  if (isEmpty(errors) && Validator.isEmpty(handingOverTeam)) {
     errors.handingOverTeam = "Handing over team cannot be empty";
   }
 
-  if (Validator.isEmpty(handedOverTeam)) {
+  if (isEmpty(errors) && Validator.isEmpty(handedOverTeam)) {
     errors.handedOverTeam = "Handed over team cannot be empty";
   }
 
-  if (!isEmpty(handedOverItems)) {
+  if (isEmpty(errors)) {
+    Team.get({ name: handingOverTeam }, (err, sourceTeam) => {
+      if (sourceTeam === undefined) {
+        errors.handingOverTeam = "handing over team is not registered";
+      }
+    });
+    Team.get({ name: handedOverTeam }, (err, targetTeam) => {
+      if (targetTeam === undefined) {
+        errors.handedOverTeam = "handed over team is not registered";
+      }
+    });
+  }
+
+  if (isEmpty(errors) && !isEmpty(handedOverItems)) {
     if (!Array.isArray(handedOverItems)) {
       errors.items = "Handover items should be an array";
     } else {

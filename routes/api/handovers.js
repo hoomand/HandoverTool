@@ -24,30 +24,14 @@ router.post(
     }
 
     const { handingOverTeam, handedOverTeam, items } = req.body;
-    Team.get({ name: handingOverTeam }, (err, sourceTeam) => {
-      if (sourceTeam === undefined) {
-        return res
-          .status(400)
-          .json({ handingOverTeam: "handing over team is not registered" });
-      } else {
-        Team.get({ name: handedOverTeam }, (err, targetTeam) => {
-          if (targetTeam === undefined) {
-            return res
-              .status(400)
-              .json({ handedOverTeam: "handed over team is not registered" });
-          }
-        });
-
-        const newHandover = new Handover({
-          userAlias: req.user.alias,
-          handingOverTeam,
-          handedOverTeam,
-          items
-        });
-
-        newHandover.save().then(handover => res.json(handover));
-      }
+    const newHandover = new Handover({
+      userAlias: req.user.alias,
+      handingOverTeam,
+      handedOverTeam,
+      items
     });
+
+    newHandover.save().then(handover => res.json(handover));
   }
 );
 
