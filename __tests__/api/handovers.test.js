@@ -201,6 +201,29 @@ describe("POST /api/handovers", () => {
     expect(response.statusCode).toBe(400);
   });
 
+  test("It should fail saving a new handover if an item in items array does not have valid url as for link", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: test_teams[1].name,
+        items: [
+          { status: "fresh", link: "http://blahblah.com/id", description: "" },
+          { status: "diagnosed", link: "something", description: "" }
+        ]
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+    expect(response.body).toEqual({
+      items: "Handover item link is not a valid URL"
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
   test("It should successfully save a new handover with zero items", async () => {
     const { token } = test_user1;
     const response = await request(app)

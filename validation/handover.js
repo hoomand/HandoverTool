@@ -53,6 +53,9 @@ module.exports = function validateHandoverInput(data, user) {
           noFaultYet = false;
         }
 
+        if (noFaultYet && !Validator.isURL(item.link)) {
+          errors.items = "Handover item link is not a valid URL";
+          noFaultYet = false;
         }
       });
     }
