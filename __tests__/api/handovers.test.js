@@ -16,12 +16,22 @@ const test_teams = [{ name: "handover_team_1" }, { name: "handover_team_2" }];
 
 const test_items = [
   {
-    action: "solve it",
+    status: "fresh",
     link: "http://blahblah.com",
     description: "oh lala"
   },
   {
-    action: "just close",
+    status: "investigated",
+    link: "http://blahblah.com",
+    description: "oh lala"
+  },
+  {
+    status: "diagnosed",
+    link: "http://blahblah.com",
+    description: "oh lala"
+  },
+  {
+    status: "monitor",
     link: "http://blahblah.com",
     description: "oh lala"
   }
@@ -81,7 +91,7 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
 
-    expect(response.body).toEqual({
+    expect(response.body).toMatchObject({
       handingOverTeam: "Handing over team cannot be empty"
     });
     expect(response.statusCode).toBe(400);
@@ -101,7 +111,7 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
 
-    expect(response.body).toEqual({
+    expect(response.body).toMatchObject({
       handedOverTeam: "Handed over team cannot be empty"
     });
     expect(response.statusCode).toBe(400);
@@ -143,6 +153,50 @@ describe("POST /api/handovers", () => {
       });
     expect(response.body).toEqual({
       items: "Each handover item must be an object"
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("It should fail saving a new handover if an item in items array does not have valid properties", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: test_teams[1].name,
+        items: [{ status: "blah", link: "whatevs" }]
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+    expect(response.body).toEqual({
+      items:
+        "Each handover item must have a status, link and description property"
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("It should fail saving a new handover if an item in items array does not have valid status", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: test_teams[1].name,
+        items: [
+          { status: "fresh", link: "whatevs", description: "" },
+          { status: "blah", link: "something", description: "" }
+        ]
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+    expect(response.body).toEqual({
+      items: "Handover item status is not valid"
     });
     expect(response.statusCode).toBe(400);
   });
