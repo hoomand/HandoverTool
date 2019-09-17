@@ -32,17 +32,27 @@ module.exports = function validateHandoverInput(data, user) {
       errors.items = "Handover items should be an array";
     } else {
       handedOverItems.forEach(item => {
-        if (!isObject(item)) {
+        let noFaultYet = true;
+
+        if (noFaultYet && !isObject(item)) {
           errors.items = "Each handover item must be an object";
-        } else {
-          if (!("status" in item && "link" in item && "description" in item)) {
-            errors.items =
-              "Each handover item must have a status, link and description property";
-          } else {
-            if (!(item.status in handOverConfigs.validStatuses)) {
-              errors.items = "Handover item status is not valid";
-            }
-          }
+          noFaultYet = false;
+        }
+
+        if (
+          noFaultYet &&
+          !("status" in item && "link" in item && "description" in item)
+        ) {
+          errors.items =
+            "Each handover item must have a status, link and description property";
+          noFaultYet = false;
+        }
+
+        if (noFaultYet && !(item.status in handOverConfigs.validStatuses)) {
+          errors.items = "Handover item status is not valid";
+          noFaultYet = false;
+        }
+
         }
       });
     }
