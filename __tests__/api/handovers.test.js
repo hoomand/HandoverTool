@@ -229,7 +229,6 @@ describe("POST /api/handovers", () => {
     const response = await request(app)
       .post("/api/handovers")
       .send({
-        userAlias: test_user1.name,
         handingOverTeam: test_teams[0].name,
         handedOverTeam: test_teams[1].name
       })
@@ -246,7 +245,6 @@ describe("POST /api/handovers", () => {
     const response = await request(app)
       .post("/api/handovers")
       .send({
-        userAlias: test_user1.name,
         handingOverTeam: test_teams[0].name,
         handedOverTeam: test_teams[1].name,
         items: test_items
