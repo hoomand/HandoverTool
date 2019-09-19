@@ -3,7 +3,12 @@ const app = require("../../app");
 const User = require("../../models/User");
 const Team = require("../../models/Team");
 const Handover = require("../../models/Handover");
-const { createUser, loginUser, createTeam } = require("../utils");
+const {
+  createUser,
+  loginUser,
+  createTeam,
+  createHandover
+} = require("../utils");
 const { randomText } = require("../../utils");
 
 let test_user1 = {
@@ -44,6 +49,13 @@ beforeAll(async () => {
 
   await createTeam(test_teams[0].name, test_user1.token);
   await createTeam(test_teams[1].name, test_user1.token);
+
+  await createHandover(
+    test_teams[0].name,
+    test_teams[1].name,
+    test_items,
+    test_user1.token
+  );
 });
 
 afterAll(async () => {
@@ -64,6 +76,20 @@ deleteAllTestHandovers = () => {
     await Handover.batchDelete(picked);
   });
 };
+
+describe("GET handovers", () => {
+  test("It should get all the handovers", async () => {
+    const response = await request(app).get("/api/handovers");
+
+    expect(response.body.handovers).not.toHaveLength(0);
+    expect(response.body.handovers[0]).toMatchObject({
+      handingOverTeam: "handover_team_1",
+      userAlias: "handover_test_user",
+      handedOverTeam: "handover_team_2"
+    });
+    expect(response.statusCode).toBe(200);
+  });
+});
 
 describe("POST /api/handovers", () => {
   test("It should fail creating new handover without authentication", async () => {

@@ -6,11 +6,6 @@ const validateHandoverInput = require("../../validation/handover");
 
 const router = express.Router();
 
-// @route   GET api/handovers
-// @desc    Tests Handovers route
-// @access  Public
-router.get("/test", (req, res) => res.json({ msg: "handovers work!" }));
-
 // @route   POST api/handovers
 // @desc    Create new handover
 // @access  Private
@@ -34,5 +29,14 @@ router.post(
     newHandover.save().then(handover => res.json(handover));
   }
 );
+
+// @route   GET api/handovers
+// @desc    Get all the handovers
+// @access  Public
+router.get("/", (req, res) => {
+  Handover.scan().exec((err, handovers) => {
+    res.json({ handovers });
+  });
+});
 
 module.exports = router;

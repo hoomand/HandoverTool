@@ -28,4 +28,24 @@ const createTeam = async (name, creator_user_token) => {
   return newTeam;
 };
 
-module.exports = { loginUser, createUser, createTeam };
+const createHandover = async (
+  handingOverTeam,
+  handedOverTeam,
+  items,
+  creator_user_token
+) => {
+  const newHandover = await request(app)
+    .post("/api/handovers")
+    .send({
+      handingOverTeam,
+      handedOverTeam,
+      items
+    })
+    .set({
+      "Content-Type": "application/json",
+      Authorization: creator_user_token
+    });
+  return newHandover;
+};
+
+module.exports = { loginUser, createUser, createTeam, createHandover };
