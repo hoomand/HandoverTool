@@ -4,12 +4,15 @@
   "description": "Handover Tool for easier handover of tickets or issues at the end of a shift",
   "main": "server.js",
   "scripts": {
+    "client:install": "npm install --prefix client",
     "test": "NODE_ENV=test jest",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watch",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "bijan hoomand",
   "license": "GPL-3.0-or-later",
@@ -27,6 +30,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "concurrently": "^4.1.2",
     "dynamoose": "^1.10.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
