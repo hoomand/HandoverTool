@@ -28,19 +28,6 @@ module.exports = function validateHandoverInput(data, user) {
     errors.handedOverTeam = "Handed over team cannot be empty";
   }
 
-  if (isEmpty(errors)) {
-    Team.get({ name: handingOverTeam }, (err, sourceTeam) => {
-      if (sourceTeam === undefined) {
-        errors.handingOverTeam = "handing over team is not registered";
-      }
-    });
-    Team.get({ name: handedOverTeam }, (err, targetTeam) => {
-      if (targetTeam === undefined) {
-        errors.handedOverTeam = "handed over team is not registered";
-      }
-    });
-  }
-
   if (isEmpty(errors) && !isEmpty(handedOverItems)) {
     if (!Array.isArray(handedOverItems)) {
       errors.items = "Handover items should be an array";

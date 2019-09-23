@@ -50,6 +50,7 @@ beforeAll(async () => {
   await createTeam(test_teams[0].name, test_user1.token);
   await createTeam(test_teams[1].name, test_user1.token);
 
+  // To test GET handover
   await createHandover(
     test_teams[0].name,
     test_teams[1].name,
@@ -141,6 +142,48 @@ describe("POST /api/handovers", () => {
       handedOverTeam: "Handed over team cannot be empty"
     });
     expect(response.statusCode).toBe(400);
+  });
+
+  test("It should fail creating new handover with a handingOverTeam that does not exist", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: "someNotDefinedTeam",
+        handedOverTeam: test_teams[1].name,
+        items: test_items
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toMatchObject({
+      handingOverTeam: "handing over team is not registered"
+    });
+  });
+
+  test("It should fail creating new handover with a handedOverTeam that does not exist", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: "someNotDefinedTeam",
+        items: test_items
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toMatchObject({
+      handedOverTeam: "handed over team is not registered"
+    });
   });
 
   test("It should fail saving a new handover if given items are not array", async () => {

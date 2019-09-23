@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watch",
     "start": "node server.js",
