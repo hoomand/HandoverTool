@@ -7,11 +7,8 @@ import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Navigator from "./Navigator";
-import Content from "./Content";
 import Header from "./Header";
-
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Users from "../auth/Users";
+import Routes from "../../Routes";
 
 function Copyright() {
   return (
@@ -167,6 +164,7 @@ const styles = {
 
 function Paperbase(props) {
   const { classes } = props;
+  console.log(classes);
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -174,36 +172,33 @@ function Paperbase(props) {
   };
 
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <nav className={classes.drawer}>
-            <Hidden smUp implementation="js">
-              <Navigator
-                PaperProps={{ style: { width: drawerWidth } }}
-                variant="temporary"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-              />
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <Navigator PaperProps={{ style: { width: drawerWidth } }} />
-            </Hidden>
-          </nav>
-          <div className={classes.app}>
-            <Header onDrawerToggle={handleDrawerToggle} />
-            <main className={classes.main}>
-              <Route exact path="/" component={Content} />
-              <Route exact path="/users" component={Users} />
-            </main>
-            <footer className={classes.footer}>
-              <Copyright />
-            </footer>
-          </div>
+    <ThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <nav className={classes.drawer}>
+          <Hidden smUp implementation="js">
+            <Navigator
+              PaperProps={{ style: { width: drawerWidth } }}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+            />
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Navigator PaperProps={{ style: { width: drawerWidth } }} />
+          </Hidden>
+        </nav>
+        <div className={classes.app}>
+          <Header onDrawerToggle={handleDrawerToggle} />
+          <main className={classes.main}>
+            <Routes />
+          </main>
+          <footer className={classes.footer}>
+            <Copyright />
+          </footer>
         </div>
-      </ThemeProvider>
-    </Router>
+      </div>
+    </ThemeProvider>
   );
 }
 
