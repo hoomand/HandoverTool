@@ -13,7 +13,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import TimerIcon from "@material-ui/icons/Timer";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PersonAdd from "@material-ui/icons/PersonAdd";
-import Icon from "@material-ui/core/Icon";
+import VpnKey from "@material-ui/icons/VpnKey";
 
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
@@ -25,7 +25,10 @@ const ComponentLink = React.forwardRef((props, ref) => (
 const categories = [
   {
     id: "Authentication",
-    children: [{ id: "Register", url: "/register", icon: <PersonAdd /> }]
+    children: [
+      { id: "Login", url: "/login", icon: <VpnKey /> },
+      { id: "Register", url: "/register", icon: <PersonAdd /> }
+    ]
   },
   {
     id: "Operators Area",
