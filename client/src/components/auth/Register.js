@@ -4,13 +4,13 @@ import { withRouter } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import TextFieldGroup from "../common/TextFieldGroup";
 import { connect } from "react-redux";
 import { registerUser } from "../../redux/actions/authActions";
 
@@ -37,8 +37,21 @@ const styles = theme => ({
 class Register extends Component {
   state = {
     alias: "",
-    password: ""
+    password: "",
+    errors: {}
   };
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -61,6 +74,7 @@ class Register extends Component {
 
   render() {
     const { classes } = this.props;
+    const { errors } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -74,20 +88,18 @@ class Register extends Component {
           <form className={classes.form} noValidate onSubmit={this.onSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
+                <TextFieldGroup
                   id="alias"
                   label="Alias"
                   name="alias"
                   value={this.state.alias}
                   autoComplete="alias"
                   onChange={this.onChange}
+                  error={errors.alias}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <TextFieldGroup
                   variant="outlined"
                   required
                   fullWidth
@@ -98,6 +110,7 @@ class Register extends Component {
                   value={this.state.password}
                   autoComplete="current-password"
                   onChange={this.onChange}
+                  error={errors.password}
                 />
               </Grid>
             </Grid>
