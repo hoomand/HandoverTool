@@ -1,7 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { logoutUser } from "../../redux/actions/authActions";
+import { isEmpty } from "../../utils/is-empty";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -14,6 +17,7 @@ import TimerIcon from "@material-ui/icons/Timer";
 import SettingsIcon from "@material-ui/icons/Settings";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import VpnKey from "@material-ui/icons/VpnKey";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
@@ -21,32 +25,6 @@ import Link from "@material-ui/core/Link";
 const ComponentLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
 ));
-
-const categories = [
-  {
-    id: "Authentication",
-    children: [
-      { id: "Login", url: "/login", icon: <VpnKey /> },
-      { id: "Register", url: "/register", icon: <PersonAdd /> }
-    ]
-  },
-  {
-    id: "Operators Area",
-    children: [
-      { id: "Handovers", url: "/", icon: <HomeIcon />, active: true },
-      { id: "New Handover", url: "/", icon: <PeopleIcon /> },
-      { id: "Analytics", url: "/", icon: <SettingsIcon /> }
-    ]
-  },
-  {
-    id: "Admin Area",
-    children: [
-      { id: "Analytics", url: "/", icon: <SettingsIcon /> },
-      { id: "Performance", url: "/", icon: <TimerIcon /> },
-      { id: "Users", url: "/users", icon: <PeopleIcon /> }
-    ]
-  }
-];
 
 const styles = theme => ({
   categoryHeader: {
@@ -89,62 +67,136 @@ const styles = theme => ({
   }
 });
 
-function Navigator(props) {
-  const { classes, ...other } = props;
+class Navigator extends Component {
+  onLogoutClick = e => {
+    e.preventDefault();
+    console.log("logout was clicked");
+    this.props.logoutUser();
+  };
 
-  return (
-    <Drawer variant="permanent" {...other}>
-      <List disablePadding>
-        <ListItem
-          className={clsx(classes.firebase, classes.item, classes.itemCategory)}
-        >
-          Handover Tool
-        </ListItem>
-        {categories.map(({ id, children }) => (
-          <React.Fragment key={id}>
-            <ListItem className={classes.categoryHeader}>
-              <ListItemText
-                classes={{
-                  primary: classes.categoryHeaderPrimary
-                }}
-              >
-                {id}
-              </ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, url, icon, active }) => (
-              <ListItem
-                key={childId}
-                button
-                className={clsx(classes.item, active && classes.itemActiveItem)}
-              >
-                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
+  render() {
+    const { classes, ...other } = this.props;
+    const { isAuthenticated, user } = this.props.auth;
+
+    let links = [
+      {
+        id: "Operators Area",
+        children: [
+          { id: "Handovers", url: "/", icon: <HomeIcon />, active: true },
+          { id: "New Handover", url: "/", icon: <PeopleIcon /> },
+          { id: "Analytics", url: "/", icon: <SettingsIcon /> }
+        ]
+      },
+      {
+        id: "Admin Area",
+        children: [
+          { id: "Analytics", url: "/", icon: <SettingsIcon /> },
+          { id: "Performance", url: "/", icon: <TimerIcon /> },
+          { id: "Users", url: "/users", icon: <PeopleIcon /> }
+        ]
+      }
+    ];
+
+    const guestLinks = {
+      id: "Authentication",
+      children: [
+        { id: "Login", url: "/login", icon: <VpnKey /> },
+        { id: "Register", url: "/register", icon: <PersonAdd /> }
+      ]
+    };
+
+    const authorizedLinks = {
+      id: "Authentication",
+      children: [
+        {
+          id: "Logout",
+          url: "/logout",
+          icon: <ExitToAppIcon />,
+          onClick: e => this.onLogoutClick(e)
+        }
+      ]
+    };
+
+    if (isAuthenticated) {
+      links.unshift(authorizedLinks);
+    } else {
+      links.unshift(guestLinks);
+    }
+
+    return (
+      <Drawer variant="permanent" {...other}>
+        <List disablePadding>
+          <ListItem
+            className={clsx(
+              classes.firebase,
+              classes.item,
+              classes.itemCategory
+            )}
+          >
+            Handover Tool
+          </ListItem>
+          {links.map(({ id, children }) => (
+            <React.Fragment key={id}>
+              <ListItem className={classes.categoryHeader}>
                 <ListItemText
                   classes={{
-                    primary: classes.itemPrimary
+                    primary: classes.categoryHeaderPrimary
                   }}
                 >
-                  <Link
-                    component={ComponentLink}
-                    to={url}
-                    variant="inherit"
-                    color="inherit"
-                  >
-                    {childId}
-                  </Link>
+                  {id}
                 </ListItemText>
               </ListItem>
-            ))}
+              {children.map(({ id: childId, url, icon, active, onClick }) => (
+                <ListItem
+                  key={childId}
+                  button
+                  className={clsx(
+                    classes.item,
+                    active && classes.itemActiveItem
+                  )}
+                >
+                  <ListItemIcon className={classes.itemIcon}>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    classes={{
+                      primary: classes.itemPrimary
+                    }}
+                  >
+                    {!onClick ? (
+                      <Link
+                        component={ComponentLink}
+                        to={url}
+                        variant="inherit"
+                        color="inherit"
+                      >
+                        {childId}
+                      </Link>
+                    ) : (
+                      <div onClick={onClick}>{childId}</div>
+                    )}
+                  </ListItemText>
+                </ListItem>
+              ))}
 
-            <Divider className={classes.divider} />
-          </React.Fragment>
-        ))}
-      </List>
-    </Drawer>
-  );
+              <Divider className={classes.divider} />
+            </React.Fragment>
+          ))}
+        </List>
+      </Drawer>
+    );
+  }
 }
 
 Navigator.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Navigator);
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(withStyles(styles)(Navigator));
