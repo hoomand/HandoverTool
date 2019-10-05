@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { logoutUser } from "../../redux/actions/authActions";
-import { isEmpty } from "../../utils/is-empty";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
