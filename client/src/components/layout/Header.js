@@ -47,6 +47,7 @@ class Header extends Component {
   render() {
     const { classes, onDrawerToggle } = this.props;
     const { isAuthenticated, user } = this.props.auth;
+    const { headerTitle } = this.props.header;
 
     const avatar = isAuthenticated ? (
       <Tooltip title={user.alias}>
@@ -91,7 +92,7 @@ class Header extends Component {
             <Grid container alignItems="center" spacing={1}>
               <Grid item xs>
                 <Typography color="inherit" variant="h5" component="h1">
-                  Authentication
+                  {headerTitle}
                 </Typography>
               </Grid>
               <Grid item>
@@ -111,7 +112,8 @@ Header.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  header: state.header
 });
 
 export default connect(

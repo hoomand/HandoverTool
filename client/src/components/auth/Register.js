@@ -13,6 +13,7 @@ import Container from "@material-ui/core/Container";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { connect } from "react-redux";
 import { registerUser } from "../../redux/actions/authActions";
+import { setHeaderTitle } from "../../redux/actions/headerActions";
 
 const styles = theme => ({
   paper: {
@@ -42,6 +43,7 @@ class Register extends Component {
   };
 
   componentDidMount() {
+    this.props.setHeaderTitle("User Signup");
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/");
     }
@@ -150,5 +152,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
+  { registerUser, setHeaderTitle }
 )(withRouter(withStyles(styles)(Register)));
