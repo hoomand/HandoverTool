@@ -49,7 +49,9 @@ class Header extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const avatar = isAuthenticated ? (
-      <Icon className="fas fa-user-circle" />
+      <Tooltip title={user.alias}>
+        <Icon className="fas fa-user-circle" />
+      </Tooltip>
     ) : (
       <Tooltip title="anonymous user">
         <Icon className="fas fa-user-secret" />
