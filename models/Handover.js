@@ -43,4 +43,5 @@ const handoverSchema = new Schema(
   }
 );
 
-module.exports = Handover = db.model("Handover", handoverSchema);
+const Handover = db.model("Handover", handoverSchema);
+module.exports = Handover;

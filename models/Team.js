@@ -21,4 +21,5 @@ const teamSchema = new Schema(
   }
 );
 
-module.exports = Team = db.model("Team", teamSchema);
+const Team = db.model("Team", teamSchema);
+module.exports = Team;

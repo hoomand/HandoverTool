@@ -6,6 +6,7 @@ switch (process.env.NODE_ENV) {
     break;
   case "prod":
     dynamoDBEndPoint = "http://aws.amazon.com/someURL";
+    break;
   case "dev":
   default:
     dynamoDBEndPoint = "http://localhost:8000";

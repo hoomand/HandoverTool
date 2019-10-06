@@ -1,7 +1,6 @@
 const isEmpty = require("./is-empty");
 const { isObject } = require("../utils");
 const Validator = require("validator");
-const Team = require("../models/Team");
 const { handoverItem: handOverConfigs } = require("../config/app");
 
 module.exports = function validateHandoverInput(data, user) {

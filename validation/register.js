@@ -5,8 +5,8 @@ const Validator = require("validator");
 module.exports = function validateRegisterInput(data) {
   let errors = {};
 
-  alias = !isEmpty(data.alias) ? data.alias : "";
-  password = !isEmpty(data.password) ? data.password : "";
+  const alias = !isEmpty(data.alias) ? data.alias : "";
+  const password = !isEmpty(data.password) ? data.password : "";
 
   if (!Validator.isLength(alias, { min: 3, max: 30 })) {
     errors.alias = "Alias must be between 3 and 30 characters";
