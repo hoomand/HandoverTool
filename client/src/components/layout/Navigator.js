@@ -21,6 +21,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 
+/* eslint-disable react/display-name */
 const ComponentLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
 ));
@@ -75,7 +76,7 @@ class Navigator extends Component {
 
   render() {
     const { classes, ...other } = this.props;
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.auth;
 
     let links = [
       {
@@ -188,7 +189,11 @@ class Navigator extends Component {
 }
 
 Navigator.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+  auth: PropTypes.object
 };
 
 const mapStateToProps = state => ({

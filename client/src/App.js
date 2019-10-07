@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 import { setCurrentUser, logoutUser } from "./redux/actions/authActions";
 import store from "./redux/store";
 import "typeface-roboto";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Paperbase from "./components/layout/Paperbase";
 
 // Check for token

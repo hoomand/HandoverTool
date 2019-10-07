@@ -108,7 +108,12 @@ class Header extends Component {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
-  onDrawerToggle: PropTypes.func.isRequired
+  onDrawerToggle: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+  auth: PropTypes.object,
+  header: PropTypes.object,
+  headerTitle: PropTypes.func
 };
 
 const mapStateToProps = state => ({

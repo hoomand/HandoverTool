@@ -6,8 +6,6 @@ import { generateStyles } from "./styles";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Hidden from "@material-ui/core/Hidden";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import Navigator from "./Navigator";
 import Header from "./Header";
 import Routes from "../../Routes";
