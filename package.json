@@ -15,14 +15,16 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
+    "client:format": "prettier --write \"client/src/**/*.{js,jsx}\"",
+    "client:format:check": "prettier --list-different \"client/src/**/*.{js,jsx}\"",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "bijan hoomand",
   "license": "GPL-3.0-or-later",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format:check && npm run lint && npm test",
-      "pre-push": "npm run format:check && npm run lint && npm test"
+      "pre-commit": "npm run format:check && npm run client:format:check && npm run lint && npm test",
+      "pre-push": "npm run format:check && npm run client:format:check && npm run lint && npm test"
     }
   },
   "jest": {
