@@ -70,7 +70,6 @@ const styles = theme => ({
 class Navigator extends Component {
   onLogoutClick = e => {
     e.preventDefault();
-    console.log("logout was clicked");
     this.props.logoutUser();
   };
 
@@ -109,7 +108,7 @@ class Navigator extends Component {
       id: "Authentication",
       children: [
         {
-          id: "Logout",
+          id: "logout",
           url: "/logout",
           icon: <ExitToAppIcon />,
           onClick: e => this.onLogoutClick(e)

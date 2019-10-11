@@ -1,7 +1,7 @@
 import { USER_LOADING, SET_USERS } from "../actions/types";
 
 const initialState = {
-  users: null,
+  data: [],
   loading: false
 };
 
@@ -15,7 +15,7 @@ export default function(state = initialState, action) {
     case SET_USERS:
       return {
         ...state,
-        users: action.payload,
+        data: action.payload,
         loading: false
       };
     default:

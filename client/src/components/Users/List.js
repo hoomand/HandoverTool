@@ -12,6 +12,11 @@ import IconButton from "@material-ui/core/IconButton";
 import { withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
@@ -46,9 +51,43 @@ class List extends Component {
     this.props.getUsers();
   }
 
+  dataDisplay = (users, classes) => {
+    if (users.length === 0) {
+      return (
+        <div className={classes.contentWrapper}>
+          <Typography color="textSecondary" align="center">
+            No users for this project yet
+          </Typography>
+        </div>
+      );
+    } else {
+      return (
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>User Alias</TableCell>
+              <TableCell align="right">Creation Date</TableCell>
+              <TableCell align="right">Role</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map(alias => (
+              <TableRow key={alias}>
+                <TableCell component="th" scope="row">
+                  {alias}
+                </TableCell>
+                <TableCell align="right">XXX</TableCell>
+                <TableCell align="right">User</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
+    }
+  };
+
   render() {
     const { classes, users } = this.props;
-    console.log(users);
 
     return (
       <Paper className={classes.paper}>
@@ -83,18 +122,18 @@ class List extends Component {
                 </Button>
                 <Tooltip title="Reload">
                   <IconButton>
-                    <RefreshIcon className={classes.block} color="inherit" />
+                    <RefreshIcon
+                      className={classes.block}
+                      color="inherit"
+                      onClick={() => this.props.getUsers()}
+                    />
                   </IconButton>
                 </Tooltip>
               </Grid>
             </Grid>
           </Toolbar>
         </AppBar>
-        <div className={classes.contentWrapper}>
-          <Typography color="textSecondary" align="center">
-            No users for this project yet
-          </Typography>
-        </div>
+        {this.dataDisplay(users.data, classes)}
       </Paper>
     );
   }
