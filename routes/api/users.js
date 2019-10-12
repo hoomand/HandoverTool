@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+const _ = require("lodash");
 
 const router = express.Router();
 
@@ -82,6 +83,15 @@ router.get("/", (req, res) => {
   User.scan().exec((err, users) => {
     const aliases = users.map(user => user.alias);
     res.json({ users: aliases.sort() });
+  });
+});
+
+router.get("/all", (req, res) => {
+  User.scan().exec((err, users) => {
+    const results = users.map(user =>
+      _.pick(user, ["alias", "entryDate", "updated_at"])
+    );
+    res.json({ results });
   });
 });
 

@@ -11,13 +11,11 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true
-    },
-    creationDate: {
-      type: Date
     }
   },
   {
-    throughput
+    throughput,
+    timestamps: { createdAt: "entryDate", updatedAt: "updated_at" }
   }
 );
 
