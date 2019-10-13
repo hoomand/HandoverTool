@@ -32,8 +32,23 @@ describe("GET /api/users", () => {
   test("It should get all existing users", async () => {
     const response = await request(app).get("/api/users");
     expect(response.body).toHaveProperty("users");
-    expect(response.body.users).toContain("users_test_user");
-    expect(response.body.users).toContain("users_test_user2");
+    expect(response.body.users).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          alias: "users_test_user"
+        })
+      ])
+    );
+    expect(response.body.users).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          alias: "users_test_user2"
+        })
+      ])
+    );
+
+    // expect(response.body.users).toContain("users_test_user");
+    // expect(response.body.users).toContain("users_test_user2");
     expect(response.statusCode).toBe(200);
   });
 

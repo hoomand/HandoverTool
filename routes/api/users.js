@@ -76,22 +76,12 @@ router.post("/login", (req, res) => {
   });
 });
 
-// @route   GET api/users
-// @desc    Get all users
-// @access  Public
 router.get("/", (req, res) => {
-  User.scan().exec((err, users) => {
-    const aliases = users.map(user => user.alias);
-    res.json({ users: aliases.sort() });
-  });
-});
-
-router.get("/all", (req, res) => {
   User.scan().exec((err, users) => {
     const results = users.map(user =>
       _.pick(user, ["alias", "entryDate", "updated_at"])
     );
-    res.json({ results });
+    res.json({ users: results });
   });
 });
 
