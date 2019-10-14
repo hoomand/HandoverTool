@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { listStyles } from "../layout/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -23,29 +24,6 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getUsers } from "../../redux/actions/userActions";
-
-const styles = theme => ({
-  paper: {
-    maxWidth: 936,
-    margin: "auto",
-    overflow: "hidden"
-  },
-  searchBar: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
-  },
-  searchInput: {
-    fontSize: theme.typography.fontSize
-  },
-  block: {
-    display: "block"
-  },
-  addUser: {
-    marginRight: theme.spacing(1)
-  },
-  contentWrapper: {
-    margin: "40px 16px"
-  }
-});
 
 class List extends Component {
   componentDidMount() {
@@ -122,7 +100,7 @@ class List extends Component {
                 <Button
                   variant="contained"
                   color="primary"
-                  className={classes.addUser}
+                  className={classes.addRow}
                 >
                   Add user
                 </Button>
@@ -159,4 +137,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { setHeaderTitle, getUsers }
-)(withStyles(styles)(List));
+)(withStyles(listStyles)(List));

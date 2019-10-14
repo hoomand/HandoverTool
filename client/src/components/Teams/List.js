@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { listStyles } from "../layout/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -21,29 +22,6 @@ import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
-
-const styles = theme => ({
-  paper: {
-    maxWidth: 936,
-    margin: "auto",
-    overflow: "hidden"
-  },
-  searchBar: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
-  },
-  searchInput: {
-    fontSize: theme.typography.fontSize
-  },
-  block: {
-    display: "block"
-  },
-  addRow: {
-    marginRight: theme.spacing(1)
-  },
-  contentWrapper: {
-    margin: "40px 16px"
-  }
-});
 
 class List extends Component {
   componentDidMount() {
@@ -151,4 +129,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { setHeaderTitle, getTeams }
-)(withStyles(styles)(List));
+)(withStyles(listStyles)(List));
