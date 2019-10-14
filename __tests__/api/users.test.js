@@ -35,20 +35,22 @@ describe("GET /api/users", () => {
     expect(response.body.users).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          alias: "users_test_user"
+          alias: "users_test_user",
+          entryDate: expect.any(String),
+          updated_at: expect.any(String)
         })
       ])
     );
     expect(response.body.users).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          alias: "users_test_user2"
+          alias: "users_test_user2",
+          entryDate: expect.any(String),
+          updated_at: expect.any(String)
         })
       ])
     );
 
-    // expect(response.body.users).toContain("users_test_user");
-    // expect(response.body.users).toContain("users_test_user2");
     expect(response.statusCode).toBe(200);
   });
 
