@@ -18,6 +18,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
+import moment from "moment";
+
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getUsers } from "../../redux/actions/userActions";
@@ -67,17 +69,21 @@ class List extends Component {
             <TableRow>
               <TableCell>User Alias</TableCell>
               <TableCell align="right">Creation Date</TableCell>
-              <TableCell align="right">Role</TableCell>
+              <TableCell align="right">Update Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map(alias => (
-              <TableRow key={alias}>
+            {users.map(user => (
+              <TableRow key={user.alias}>
                 <TableCell component="th" scope="row">
-                  {alias}
+                  {user.alias}
                 </TableCell>
-                <TableCell align="right">XXX</TableCell>
-                <TableCell align="right">User</TableCell>
+                <TableCell align="right">
+                  {moment(user.entryDate).format("YYYY-MM-DD HH:mm:ss")}
+                </TableCell>
+                <TableCell align="right">
+                  {moment(user.updated_at).format("YYYY-MM-DD HH:mm:ss")}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
