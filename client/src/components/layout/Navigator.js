@@ -91,7 +91,8 @@ class Navigator extends Component {
         children: [
           { id: "Analytics", url: "/", icon: <SettingsIcon /> },
           { id: "Performance", url: "/", icon: <TimerIcon /> },
-          { id: "Users", url: "/users", icon: <PeopleIcon /> }
+          { id: "Users", url: "/users", icon: <PeopleIcon /> },
+          { id: "Teams", url: "/teams", icon: <PeopleIcon /> }
         ]
       }
     ];
