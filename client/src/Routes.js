@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import React, { Component } from "react";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Register from "./components/auth/Register";
@@ -11,16 +11,14 @@ class Routes extends Component {
   render() {
     return (
       <React.Fragment>
-        <Router>
-          <Route exact path="/" component={UsersList} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/users" component={UsersList} />
-          <Route exact path="/teams" component={TeamsList} />
-          <Switch>
-            <PrivateRoute exact path="/teams/create" component={TeamCreate} />
-          </Switch>
-        </Router>
+        <Route exact path="/" component={UsersList} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/users" component={UsersList} />
+        <Route exact path="/teams" component={TeamsList} />
+        <Switch>
+          <PrivateRoute exact path="/teams/create" component={TeamCreate} />
+        </Switch>
       </React.Fragment>
     );
   }
