@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { listStyles } from "../layout/styles";
 import { withStyles } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -11,6 +12,7 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 
+import { createTeam } from "../../redux/actions/teamActions";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 
 class Create extends Component {
@@ -19,19 +21,39 @@ class Create extends Component {
     errors: {}
   };
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+
+    const teamData = {
+      name: this.state.teamName
+    };
+
+    this.props.createTeam(teamData, this.props.history);
+  };
+
   componentDidMount() {
     this.props.setHeaderTitle("Teams - New Team");
+
+    if (!this.props.auth.isAuthenticated) {
+      this.props.history.push("/login");
+    }
   }
 
   render() {
     const { classes } = this.props;
     const { errors } = this.state;
     return (
-      <Container component="main" maxWidth="8">
+      <Container component="main" maxWidth="lg">
         <Paper className={classes.paper}>
           <AppBar
             className={classes.searchBar}
@@ -58,7 +80,7 @@ class Create extends Component {
                   value={this.state.teamName}
                   autoComplete="name"
                   onChange={this.onChange}
-                  error={errors.alias}
+                  error={errors.name}
                 />
               </Grid>
 
@@ -82,10 +104,19 @@ class Create extends Component {
 
 Create.propTypes = {
   setHeaderTitle: PropTypes.func,
-  classes: PropTypes.object
+  classes: PropTypes.object,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  createTeam: PropTypes.func.isRequired,
+  history: PropTypes.object
 };
 
+const mapStateToProps = state => ({
+  errors: state.errors,
+  auth: state.auth
+});
+
 export default connect(
-  null,
-  { setHeaderTitle }
-)(withStyles(listStyles)(Create));
+  mapStateToProps,
+  { setHeaderTitle, createTeam }
+)(withRouter(withStyles(listStyles)(Create)));
