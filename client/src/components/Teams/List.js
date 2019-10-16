@@ -19,6 +19,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
+import moment from "moment";
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
@@ -52,6 +53,8 @@ class List extends Component {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell align="right">Created By</TableCell>
+              <TableCell align="right">Creation Date</TableCell>
+              <TableCell align="right">Update Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -61,6 +64,12 @@ class List extends Component {
                   {team.name}
                 </TableCell>
                 <TableCell align="right">{team.created_by_alias}</TableCell>
+                <TableCell align="right">
+                  {moment(team.entryDate).format("YYYY-MM-DD HH:mm:ss")}
+                </TableCell>
+                <TableCell align="right">
+                  {moment(team.updated_at).format("YYYY-MM-DD HH:mm:ss")}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
