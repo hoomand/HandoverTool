@@ -52,7 +52,6 @@ TextFieldGroup.propTypes = {
 };
 
 TextFieldGroup.defaultProps = {
-  variant: "outlined",
   type: "text"
 };
 

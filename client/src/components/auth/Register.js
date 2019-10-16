@@ -98,6 +98,7 @@ class Register extends Component {
                   autoComplete="alias"
                   onChange={this.onChange}
                   error={errors.alias}
+                  variant="outlined"
                 />
               </Grid>
               <Grid item xs={12}>

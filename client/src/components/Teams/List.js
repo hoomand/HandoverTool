@@ -22,6 +22,13 @@ import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
+import { Link } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
+
+/* eslint-disable react/display-name */
+const ComponentLink = React.forwardRef((props, ref) => (
+  <RouterLink innerRef={ref} {...props} />
+));
 
 class List extends Component {
   componentDidMount() {
@@ -94,7 +101,14 @@ class List extends Component {
                   color="primary"
                   className={classes.addRow}
                 >
-                  Add Team
+                  <Link
+                    component={ComponentLink}
+                    to="/teams/create"
+                    variant="inherit"
+                    color="inherit"
+                  >
+                    Add Team
+                  </Link>
                 </Button>
                 <Tooltip title="Reload">
                   <IconButton>
