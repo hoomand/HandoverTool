@@ -49,26 +49,40 @@ describe("GET /api/teams", () => {
     const response = await request(app).get("/api/teams");
 
     expect(response.body).toHaveProperty("teams");
-    expect(response.body.teams).toContainEqual({
-      name: test_teams[0].name,
-      created_by_alias: test_user1.alias
-    });
-    expect(response.body.teams).toContainEqual({
-      name: test_teams[1].name,
-      created_by_alias: test_user2.alias
-    });
+    expect(response.body.teams).toEqual(
+      expect.arrayContaining(
+        [
+          expect.objectContaining({
+            name: test_teams[0].name,
+            created_by_alias: test_user1.alias,
+            entryDate: expect.any(String),
+            updated_at: expect.any(String)
+          })
+        ],
+        expect.objectContaining({
+          name: test_teams[1].name,
+          created_by_alias: test_user2.alias,
+          entryDate: expect.any(String),
+          updated_at: expect.any(String)
+        })
+      )
+    );
     expect(response.statusCode).toBe(200);
   });
   test("It should fetch a team by name", async () => {
     const response = await request(app).get(`/api/teams/${test_teams[0].name}`);
 
     expect(response.body).toHaveProperty("teams");
-    expect(response.body.teams).toEqual([
-      {
-        name: test_teams[0].name,
-        created_by_alias: test_user1.alias
-      }
-    ]);
+    expect(response.body.teams).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: test_teams[0].name,
+          created_by_alias: test_user1.alias,
+          entryDate: expect.any(String),
+          updated_at: expect.any(String)
+        })
+      ])
+    );
     expect(response.statusCode).toBe(200);
   });
 });
@@ -163,10 +177,14 @@ describe("POST /api/teams", () => {
         Authorization: token
       });
 
-    expect(response.body).toEqual({
-      name: "Seattle Blues",
-      created_by_alias: test_user1.alias
-    });
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: "Seattle Blues",
+        created_by_alias: test_user1.alias,
+        entryDate: expect.any(String),
+        updated_at: expect.any(String)
+      })
+    );
     expect(response.statusCode).toBe(200);
   });
 });
