@@ -6,6 +6,7 @@ import Login from "./components/auth/Login";
 import { default as UsersList } from "./components/Users/List";
 import { default as TeamsList } from "./components/Teams/List";
 import { default as TeamCreate } from "./components/Teams/Create";
+import { default as HandoversList } from "./components/Handovers/List";
 
 class Routes extends Component {
   render() {
@@ -19,6 +20,7 @@ class Routes extends Component {
         <Switch>
           <PrivateRoute exact path="/teams/create" component={TeamCreate} />
         </Switch>
+        <Route exact path="/handovers" component={HandoversList} />
       </React.Fragment>
     );
   }

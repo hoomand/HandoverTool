@@ -81,9 +81,12 @@ class Navigator extends Component {
       {
         id: "Operators Area",
         children: [
-          { id: "Handovers", url: "/", icon: <HomeIcon />, active: true },
-          { id: "New Handover", url: "/", icon: <PeopleIcon /> },
-          { id: "Analytics", url: "/", icon: <SettingsIcon /> }
+          {
+            id: "Handovers",
+            url: "/handovers",
+            icon: <HomeIcon />,
+            active: true
+          }
         ]
       },
       {

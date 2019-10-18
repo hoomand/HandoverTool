@@ -12,3 +12,7 @@ export const SET_USERS = "SET_USERS";
 // Teams
 export const TEAM_LOADING = "TEAM_LOADING";
 export const SET_TEAMS = "SET_TEAMS";
+
+// Handovers
+export const HANDOVER_LOADING = "HANDOVER_LOADING";
+export const SET_HANDOVERS = "SET_HANDOVERS";
