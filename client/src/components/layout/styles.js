@@ -49,3 +49,17 @@ export const listStyles = theme => ({
     margin: "40px 16px"
   }
 });
+
+export const selectStyles = theme => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
+  }
+});
