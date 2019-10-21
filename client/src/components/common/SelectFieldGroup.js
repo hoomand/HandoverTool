@@ -27,14 +27,7 @@ class SelectFieldGroup extends Component {
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor={id}>{label}</InputLabel>
-          <Select
-            value={value}
-            onChange={onChange}
-            inputProps={{
-              name: { name },
-              id: { id }
-            }}
-          >
+          <Select value={value} onChange={onChange} name={name} id={id}>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>

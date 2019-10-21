@@ -11,9 +11,11 @@ import Grid from "@material-ui/core/Grid";
 import SelectFieldGroup from "../common/SelectFieldGroup";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
+import Icon from "@material-ui/core/Icon";
 
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
+import { IconButton } from "@material-ui/core";
 
 class Create extends Component {
   state = {
@@ -54,6 +56,10 @@ class Create extends Component {
     }
   }
 
+  addItem = () => {
+    console.log("adding a new item!");
+  };
+
   render() {
     const { classes, teams } = this.props;
     const { errors } = this.state;
@@ -63,12 +69,7 @@ class Create extends Component {
     return (
       <Container component="main" maxWidth="lg">
         <Paper className={classes.paper}>
-          <AppBar
-            className={classes.searchBar}
-            position="static"
-            color="default"
-            elevation={0}
-          >
+          <AppBar position="static" color="default" elevation={0}>
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs>
@@ -79,8 +80,8 @@ class Create extends Component {
           </AppBar>
 
           <form noValidate onSubmit={this.onSubmit}>
-            <Grid container spacing={3} justify="flex-end">
-              <Grid item xs={12}>
+            <Grid container spacing={3} justify="center">
+              <Grid item xs={6}>
                 <SelectFieldGroup
                   id="handingOverTeam-name"
                   label="Handing Over Team"
@@ -92,20 +93,59 @@ class Create extends Component {
                   error={errors.handingOverTeam}
                 />
               </Grid>
-
-              <Grid item xs={3}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Create
-                </Button>
+              <Grid item xs={6}>
+                <SelectFieldGroup
+                  id="handedOverTeam-name"
+                  label="Handed Over Team"
+                  name="handedOverTeam"
+                  value={this.state.handedOverTeam}
+                  options={teamNames}
+                  helperText="The target team accepting the handover"
+                  onChange={this.onChange}
+                  error={errors.handedOverTeam}
+                />
+              </Grid>
+              <Grid item xs={10}>
+                <AppBar position="static" color="default" elevation={0}>
+                  <Toolbar>
+                    <Grid container alignItems="center">
+                      <Grid item xs={11}>
+                        <strong>Items</strong>
+                      </Grid>
+                      <Grid item xs alignSelf="flex-end">
+                        <IconButton color="inherit" onClick={this.addItem}>
+                          <Icon className="fas fa-plus-circle" />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Toolbar>
+                </AppBar>
+                <Grid container alignItems="center">
+                  <Grid item xs={11}>
+                    Status, Link, Description
+                  </Grid>
+                  <Grid item xs alignSelf="flex-end">
+                    <IconButton color="inherit" onClick={this.addItem}>
+                      <Icon className="fas fa-minus-circle" />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </form>
         </Paper>
+        <Grid
+          container
+          spacing={3}
+          justify="flex-end"
+          style={{ paddingTop: 20 }}
+        >
+          <Grid item xs={3}>
+            <Button type="submit" fullWidth variant="contained" color="primary">
+              Create
+            </Button>
+          </Grid>
+        </Grid>
       </Container>
     );
   }

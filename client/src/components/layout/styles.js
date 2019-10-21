@@ -29,7 +29,6 @@ export const generateStyles = (theme, drawerWidth) => {
 
 export const listStyles = theme => ({
   paper: {
-    maxWidth: 936,
     margin: "auto",
     overflow: "hidden"
   },
@@ -57,7 +56,8 @@ export const selectStyles = theme => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120
+    minWidth: 120,
+    width: "90%"
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
