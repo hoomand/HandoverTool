@@ -23,6 +23,15 @@ class SelectFieldGroup extends Component {
     } = this.props;
 
     const { classes } = this.props;
+
+    const menuItems = [];
+    for (const key in options) {
+      menuItems.push(
+        <MenuItem value={key} key={key}>
+          {options[key]}
+        </MenuItem>
+      );
+    }
     return (
       <div>
         <FormControl className={classes.formControl}>
@@ -31,11 +40,7 @@ class SelectFieldGroup extends Component {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {options.map(option => (
-              <MenuItem value={option} key={option}>
-                {option}
-              </MenuItem>
-            ))}
+            {menuItems}
           </Select>
           <FormHelperText>{helperText}</FormHelperText>
         </FormControl>
@@ -52,7 +57,7 @@ SelectFieldGroup.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
   value: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
+  options: PropTypes.object.isRequired,
   helperText: PropTypes.string,
   info: PropTypes.string,
   error: PropTypes.string,
