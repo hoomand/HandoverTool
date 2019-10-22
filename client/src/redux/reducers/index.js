@@ -5,6 +5,7 @@ import headerReducer from "./headerReducer";
 import userReducer from "./userReducer";
 import teamReducer from "./teamReducer";
 import handoverReducer from "./handoverReducer";
+import configReducer from "./configReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   header: headerReducer,
   users: userReducer,
   teams: teamReducer,
-  handovers: handoverReducer
+  handovers: handoverReducer,
+  configs: configReducer
 });

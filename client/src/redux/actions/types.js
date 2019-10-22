@@ -16,3 +16,7 @@ export const SET_TEAMS = "SET_TEAMS";
 // Handovers
 export const HANDOVER_LOADING = "HANDOVER_LOADING";
 export const SET_HANDOVERS = "SET_HANDOVERS";
+
+// Configs
+export const CONFIGS_LOADING = "CONFIGS_LOADING";
+export const SET_CONFIGS = "SET_CONFIGS";
