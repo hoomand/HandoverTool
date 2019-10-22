@@ -16,7 +16,6 @@ const styles = generateStyles(theme, drawerWidth);
 
 function Paperbase(props) {
   const { classes } = props;
-  console.log(classes);
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
