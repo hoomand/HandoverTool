@@ -13,19 +13,27 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 
-import isEmpty from "../../utils/is-empty";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
-import { getConfigs } from "../../redux/actions/configActions";
 import { IconButton } from "@material-ui/core";
+import Item from "./Item";
 
 class Create extends Component {
   state = {
     handingOverTeam: "",
     handedOverTeam: "",
-    items: [{ status: "" }],
+    items: [this._emptyItem()],
     errors: {}
   };
+
+  _emptyItem() {
+    return {
+      status: "",
+      link: "",
+      description: ""
+    };
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
@@ -52,15 +60,16 @@ class Create extends Component {
   componentDidMount() {
     this.props.setHeaderTitle("Handovers - New Handover");
     this.props.getTeams();
-    this.props.getConfigs();
 
     if (!this.props.auth.isAuthenticated) {
       this.props.history.push("/login");
     }
   }
 
-  addItem = () => {
-    console.log("adding a new item!");
+  _addItem = e => {
+    e.preventDefault();
+    const newItems = [...this.state.items, this._emptyItem()];
+    this.setState({ items: newItems });
   };
 
   render() {
@@ -69,11 +78,6 @@ class Create extends Component {
 
     const teamNames = {};
     teams.data.forEach(team => (teamNames[team.name] = team.name));
-
-    const { handoverItem } = this.props.configs.data;
-    const validStatuses = !isEmpty(handoverItem)
-      ? handoverItem.validStatuses
-      : {};
 
     return (
       <Container component="main" maxWidth="lg">
@@ -122,31 +126,29 @@ class Create extends Component {
                         <strong>Items</strong>
                       </Grid>
                       <Grid item xs alignSelf="flex-end">
-                        <IconButton color="inherit" onClick={this.addItem}>
+                        <IconButton color="inherit" onClick={this._addItem}>
                           <Icon className="fas fa-plus-circle" />
                         </IconButton>
                       </Grid>
                     </Grid>
                   </Toolbar>
                 </AppBar>
-                <Grid container alignItems="center">
-                  <Grid item xs={11}>
-                    <SelectFieldGroup
-                      id="itemStatus-0"
-                      label="Issue Status"
-                      name="items"
-                      value={this.state.items}
-                      options={validStatuses}
-                      helperText="ticket status"
-                      onChange={this.onChange}
-                      error={errors.items}
-                    />
-                  </Grid>
-                  <Grid item xs alignSelf="flex-end">
-                    <IconButton color="inherit" onClick={this.addItem}>
-                      <Icon className="fas fa-minus-circle" />
-                    </IconButton>
-                  </Grid>
+
+                <Grid container style={{ textAlign: "right" }}>
+                  {this.state.items.map((item, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <Grid item xs={10}>
+                          <Item value={item} key={index} />
+                        </Grid>
+                        <Grid item xs alignSelf="flex-end">
+                          <IconButton color="inherit" onClick={this.addItem}>
+                            <Icon className="fas fa-minus-circle" />
+                          </IconButton>
+                        </Grid>
+                      </React.Fragment>
+                    );
+                  })}
                 </Grid>
               </Grid>
             </Grid>
@@ -176,19 +178,16 @@ Create.propTypes = {
   errors: PropTypes.object.isRequired,
   history: PropTypes.object,
   getTeams: PropTypes.func.isRequired,
-  teams: PropTypes.object.isRequired,
-  getConfigs: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  teams: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
   auth: state.auth,
-  teams: state.teams,
-  configs: state.configs
+  teams: state.teams
 });
 
 export default connect(
   mapStateToProps,
-  { setHeaderTitle, getTeams, getConfigs }
+  { setHeaderTitle, getTeams }
 )(withRouter(withStyles(listStyles)(Create)));
