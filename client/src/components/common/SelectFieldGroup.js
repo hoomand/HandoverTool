@@ -7,6 +7,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/styles";
+import { capitalize } from "../../utils/Utils";
 
 class SelectFieldGroup extends Component {
   render() {
@@ -28,7 +29,7 @@ class SelectFieldGroup extends Component {
     for (const key in options) {
       menuItems.push(
         <MenuItem value={key} key={key}>
-          {options[key]}
+          {capitalize(key)} - {options[key]}
         </MenuItem>
       );
     }
