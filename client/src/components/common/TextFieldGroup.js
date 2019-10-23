@@ -12,6 +12,7 @@ class TextFieldGroup extends Component {
       variant,
       value,
       autoComplete,
+      helperText,
       onChange,
       error,
       info
@@ -29,6 +30,7 @@ class TextFieldGroup extends Component {
           name={name}
           value={value}
           autoComplete={autoComplete}
+          helperText={helperText}
           onChange={onChange}
         />
         {info && <div>{info}</div>}
@@ -44,6 +46,7 @@ TextFieldGroup.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string.isRequired,
   info: PropTypes.string,
+  helperText: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   variant: PropTypes.string,
