@@ -34,6 +34,16 @@ class Create extends Component {
     };
   }
 
+  _updateItems = (e, index) => {
+    const updatedItems = this.state.items.map((item, j) => {
+      if (j === index) {
+        item[e.target.name] = e.target.value;
+      }
+      return item;
+    });
+    this.setState({ items: updatedItems });
+  };
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
@@ -70,6 +80,10 @@ class Create extends Component {
     e.preventDefault();
     const newItems = [...this.state.items, this._emptyItem()];
     this.setState({ items: newItems });
+  };
+
+  _removeItem = index => {
+    console.log(`removing item with index ${index}`);
   };
 
   render() {
@@ -139,10 +153,19 @@ class Create extends Component {
                     return (
                       <React.Fragment key={index}>
                         <Grid item xs={10}>
-                          <Item value={item} key={index} />
+                          <Item
+                            value={item}
+                            key={index}
+                            onChange={e => this._updateItems(e, index)}
+                          />
                         </Grid>
                         <Grid item xs alignSelf="flex-end">
-                          <IconButton color="inherit" onClick={this.addItem}>
+                          <IconButton
+                            color="inherit"
+                            onClick={index => {
+                              this._removeItem(index);
+                            }}
+                          >
                             <Icon className="fas fa-minus-circle" />
                           </IconButton>
                         </Grid>

@@ -10,11 +10,6 @@ import Grid from "@material-ui/core/Grid";
 import { getConfigs } from "../../redux/actions/configActions";
 
 class Item extends Component {
-  state = {
-    status: "",
-    link: ""
-  };
-
   componentDidMount() {
     this.props.getConfigs();
   }
@@ -24,6 +19,7 @@ class Item extends Component {
   };
 
   render() {
+    const { status, link, description } = this.props.value;
     const { handoverItem } = this.props.configs.data;
     const validStatuses = !isEmpty(handoverItem)
       ? handoverItem.validStatuses
@@ -36,10 +32,10 @@ class Item extends Component {
             id="link"
             label="Link"
             name="link"
-            value={this.state.link}
+            value={link}
             autoComplete="link"
             helperText="URL to the problem in ticketing portal"
-            onChange={this.onChange}
+            onChange={e => this.props.onChange(e)}
           />
         </Grid>
 
@@ -48,10 +44,10 @@ class Item extends Component {
             id="status"
             label="Status"
             name="status"
-            value={this.state.status}
+            value={status}
             options={validStatuses}
             helperText="how much progress was on the handover item?"
-            onChange={this.onChange}
+            onChange={e => this.props.onChange(e)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -59,10 +55,10 @@ class Item extends Component {
             id="description"
             label="Description"
             name="description"
-            value={this.state.description}
+            value={description}
             autoComplete="description"
             helperText="Any explanation to clarify the situation"
-            onChange={this.onChange}
+            onChange={e => this.props.onChange(e)}
           />
         </Grid>
       </Grid>
@@ -72,7 +68,9 @@ class Item extends Component {
 
 Item.propTypes = {
   getConfigs: PropTypes.func.isRequired,
-  configs: PropTypes.object
+  onChange: PropTypes.func.isRequired,
+  configs: PropTypes.object,
+  value: PropTypes.object
 };
 
 const mapStateToProps = state => ({
