@@ -84,6 +84,9 @@ class Create extends Component {
 
   _removeItem = index => {
     console.log(`removing item with index ${index}`);
+    const newItems = this.state.items;
+    newItems.splice(index, 1);
+    this.setState({ items: newItems });
   };
 
   render() {
@@ -162,7 +165,7 @@ class Create extends Component {
                         <Grid item xs alignSelf="flex-end">
                           <IconButton
                             color="inherit"
-                            onClick={index => {
+                            onClick={() => {
                               this._removeItem(index);
                             }}
                           >
