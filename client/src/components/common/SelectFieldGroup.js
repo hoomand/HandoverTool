@@ -19,8 +19,7 @@ class SelectFieldGroup extends Component {
       options,
       helperText,
       onChange,
-      error,
-      info
+      error
     } = this.props;
 
     const { classes } = this.props;
@@ -37,16 +36,20 @@ class SelectFieldGroup extends Component {
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor={id}>{label}</InputLabel>
-          <Select value={value} onChange={onChange} name={name} id={id}>
+          <Select
+            value={value}
+            onChange={onChange}
+            name={name}
+            id={id}
+            error={!!error}
+          >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
             {menuItems}
           </Select>
-          <FormHelperText>{helperText}</FormHelperText>
+          <FormHelperText>{error ? error : helperText}</FormHelperText>
         </FormControl>
-        {info && <div>{info}</div>}
-        {error && <div>{error}</div>}
       </div>
     );
   }
