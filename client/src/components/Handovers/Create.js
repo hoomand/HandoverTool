@@ -15,6 +15,7 @@ import Icon from "@material-ui/core/Icon";
 
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getTeams } from "../../redux/actions/teamActions";
+import { createHandover } from "../../redux/actions/handoverActions";
 import { IconButton } from "@material-ui/core";
 import Item from "./Item";
 
@@ -64,7 +65,7 @@ class Create extends Component {
     };
     console.log(handoverData);
 
-    // this.props.createTeam(teamData, this.props.history);
+    this.props.createHandover(handoverData, this.props.history);
   };
 
   componentDidMount() {
@@ -187,7 +188,13 @@ class Create extends Component {
           style={{ paddingTop: 20 }}
         >
           <Grid item xs={3}>
-            <Button type="submit" fullWidth variant="contained" color="primary">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={e => this.onSubmit(e)}
+            >
               Create
             </Button>
           </Grid>
@@ -204,6 +211,7 @@ Create.propTypes = {
   errors: PropTypes.object.isRequired,
   history: PropTypes.object,
   getTeams: PropTypes.func.isRequired,
+  createHandover: PropTypes.func.isRequired,
   teams: PropTypes.object.isRequired
 };
 
@@ -215,5 +223,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setHeaderTitle, getTeams }
+  { setHeaderTitle, getTeams, createHandover }
 )(withRouter(withStyles(listStyles)(Create)));
