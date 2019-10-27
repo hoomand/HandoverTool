@@ -1,7 +1,13 @@
 import axios from "axios";
-import { SET_HANDOVERS, HANDOVER_LOADING, GET_ERRORS } from "./types";
+import {
+  SET_HANDOVERS,
+  HANDOVER_LOADING,
+  GET_ERRORS,
+  RESET_ERRORS
+} from "./types";
 
 export const createHandover = (handoverData, history) => dispatch => {
+  dispatch({ type: RESET_ERRORS });
   axios
     .post("/api/handovers", handoverData)
     .then(() => history.push("/handovers"))
@@ -9,6 +15,7 @@ export const createHandover = (handoverData, history) => dispatch => {
 };
 
 export const getHandovers = () => dispatch => {
+  dispatch({ type: RESET_ERRORS });
   dispatch(setHandoverLoading);
   axios
     .get("/api/handovers")
