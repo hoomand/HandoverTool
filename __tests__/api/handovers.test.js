@@ -144,6 +144,28 @@ describe("POST /api/handovers", () => {
     expect(response.statusCode).toBe(400);
   });
 
+  test("It should fail creating new handover when handingOverTeam is the same as handedOverTeam", async () => {
+    const { token } = test_user1;
+    const response = await request(app)
+      .post("/api/handovers")
+      .send({
+        userAlias: test_user1.name,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: test_teams[0].name,
+        items: test_items
+      })
+      .set({
+        "Content-Type": "application/json",
+        Authorization: token
+      });
+
+    expect(response.body).toMatchObject({
+      handedOverTeam:
+        "Handing over team and handed over team cannot be the same"
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
   test("It should fail creating new handover with a handingOverTeam that does not exist", async () => {
     const { token } = test_user1;
     const response = await request(app)

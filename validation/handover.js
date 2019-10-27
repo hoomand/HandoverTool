@@ -27,6 +27,11 @@ module.exports = function validateHandoverInput(data, user) {
     errors.handedOverTeam = "Handed over team cannot be empty";
   }
 
+  if (handedOverTeam === handingOverTeam) {
+    errors.handedOverTeam =
+      "Handing over team and handed over team cannot be the same";
+  }
+
   if (isEmpty(errors) && !isEmpty(handedOverItems)) {
     if (!Array.isArray(handedOverItems)) {
       errors.items = "Handover items should be an array";
