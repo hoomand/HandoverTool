@@ -15,7 +15,7 @@ class TextFieldGroup extends Component {
       helperText,
       onChange,
       error,
-      info
+      required
     } = this.props;
     return (
       <div>
@@ -23,18 +23,16 @@ class TextFieldGroup extends Component {
           error={!!error}
           variant={variant}
           type={type}
-          required
+          required={required}
           fullWidth
           id={id}
           label={label}
           name={name}
           value={value}
           autoComplete={autoComplete}
-          helperText={helperText}
+          helperText={error ? error : helperText}
           onChange={onChange}
         />
-        {info && <div>{info}</div>}
-        {error && <div>{error}</div>}
       </div>
     );
   }
@@ -45,17 +43,18 @@ TextFieldGroup.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
   value: PropTypes.string.isRequired,
-  info: PropTypes.string,
   helperText: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   variant: PropTypes.string,
   type: PropTypes.string,
-  autoComplete: PropTypes.string
+  autoComplete: PropTypes.string,
+  required: PropTypes.bool
 };
 
 TextFieldGroup.defaultProps = {
-  type: "text"
+  type: "text",
+  required: true
 };
 
 export default TextFieldGroup;
