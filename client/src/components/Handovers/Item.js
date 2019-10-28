@@ -20,6 +20,7 @@ class Item extends Component {
 
   render() {
     const { status, link, description } = this.props.value;
+    const { error } = this.props;
     const { handoverItem } = this.props.configs.data;
     const validStatuses = !isEmpty(handoverItem)
       ? handoverItem.validStatuses
@@ -36,6 +37,11 @@ class Item extends Component {
             autoComplete="link"
             helperText="URL to the problem in ticketing portal"
             onChange={e => this.props.onChange(e)}
+            error={
+              error !== null && error.section === "link"
+                ? error.handoverItems
+                : null
+            }
           />
         </Grid>
 
@@ -48,6 +54,11 @@ class Item extends Component {
             options={validStatuses}
             helperText="how much progress was on the handover item?"
             onChange={e => this.props.onChange(e)}
+            error={
+              error !== null && error.section === "status"
+                ? error.handoverItems
+                : null
+            }
           />
         </Grid>
         <Grid item xs={12}>
@@ -55,6 +66,7 @@ class Item extends Component {
             id="description"
             label="Description"
             name="description"
+            required={false}
             value={description}
             autoComplete="description"
             helperText="Any explanation to clarify the situation"
@@ -70,7 +82,8 @@ Item.propTypes = {
   getConfigs: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   configs: PropTypes.object,
-  value: PropTypes.object
+  value: PropTypes.object,
+  error: PropTypes.object
 };
 
 const mapStateToProps = state => ({

@@ -160,6 +160,7 @@ class Create extends Component {
                             value={item}
                             key={index}
                             onChange={e => this._updateItems(e, index)}
+                            error={errors.index === index ? errors : null}
                           />
                         </Grid>
                         <Grid item xs>
