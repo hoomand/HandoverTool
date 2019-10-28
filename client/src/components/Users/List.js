@@ -105,12 +105,8 @@ class List extends Component {
                   Add user
                 </Button>
                 <Tooltip title="Reload">
-                  <IconButton>
-                    <RefreshIcon
-                      className={classes.block}
-                      color="inherit"
-                      onClick={() => this.props.getUsers()}
-                    />
+                  <IconButton onClick={() => this.props.getUsers()}>
+                    <RefreshIcon className={classes.block} color="inherit" />
                   </IconButton>
                 </Tooltip>
               </Grid>

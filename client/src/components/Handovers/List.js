@@ -129,12 +129,8 @@ class List extends Component {
                   </Link>
                 </Button>
                 <Tooltip title="Reload">
-                  <IconButton>
-                    <RefreshIcon
-                      className={classes.block}
-                      color="inherit"
-                      onClick={() => this.props.getHandovers()}
-                    />
+                  <IconButton onClick={() => this.props.getHandovers()}>
+                    <RefreshIcon className={classes.block} color="inherit" />
                   </IconButton>
                 </Tooltip>
               </Grid>

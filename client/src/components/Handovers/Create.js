@@ -142,7 +142,7 @@ class Create extends Component {
                       <Grid item xs={11}>
                         <strong>Items</strong>
                       </Grid>
-                      <Grid item xs alignSelf="flex-end">
+                      <Grid item xs>
                         <IconButton color="inherit" onClick={this._addItem}>
                           <Icon className="fas fa-plus-circle" />
                         </IconButton>
@@ -162,7 +162,7 @@ class Create extends Component {
                             onChange={e => this._updateItems(e, index)}
                           />
                         </Grid>
-                        <Grid item xs alignSelf="flex-end">
+                        <Grid item xs>
                           <IconButton
                             color="inherit"
                             onClick={() => {
