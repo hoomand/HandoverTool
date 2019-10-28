@@ -223,7 +223,7 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
     expect(response.body).toEqual({
-      items: "Handover items should be an array"
+      handoverItems: "Handover items should be an array"
     });
     expect(response.statusCode).toBe(400);
   });
@@ -243,7 +243,7 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
     expect(response.body).toEqual({
-      items: "Each handover item must be an object"
+      handoverItems: "Each handover item must be an object"
     });
     expect(response.statusCode).toBe(400);
   });
@@ -263,7 +263,7 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
     expect(response.body).toEqual({
-      items:
+      handoverItems:
         "Each handover item must have a status, link and description property"
     });
     expect(response.statusCode).toBe(400);
@@ -287,7 +287,9 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
     expect(response.body).toEqual({
-      items: "Handover item status is not valid"
+      handoverItems: "Handover item status is not valid",
+      section: "status",
+      index: 1
     });
     expect(response.statusCode).toBe(400);
   });
@@ -310,7 +312,9 @@ describe("POST /api/handovers", () => {
         Authorization: token
       });
     expect(response.body).toEqual({
-      items: "Handover item link is not a valid URL"
+      handoverItems: "Handover item link is not a valid URL",
+      section: "link",
+      index: 1
     });
     expect(response.statusCode).toBe(400);
   });

@@ -34,13 +34,13 @@ module.exports = function validateHandoverInput(data, user) {
 
   if (isEmpty(errors) && !isEmpty(handedOverItems)) {
     if (!Array.isArray(handedOverItems)) {
-      errors.items = "Handover items should be an array";
+      errors.handoverItems = "Handover items should be an array";
     } else {
-      handedOverItems.forEach(item => {
+      handedOverItems.forEach((item, index) => {
         let noFaultYet = true;
 
         if (noFaultYet && !isObject(item)) {
-          errors.items = "Each handover item must be an object";
+          errors.handoverItems = "Each handover item must be an object";
           noFaultYet = false;
         }
 
@@ -48,18 +48,22 @@ module.exports = function validateHandoverInput(data, user) {
           noFaultYet &&
           !("status" in item && "link" in item && "description" in item)
         ) {
-          errors.items =
+          errors.handoverItems =
             "Each handover item must have a status, link and description property";
           noFaultYet = false;
         }
 
         if (noFaultYet && !(item.status in handOverConfigs.validStatuses)) {
-          errors.items = "Handover item status is not valid";
+          errors.handoverItems = "Handover item status is not valid";
+          errors.section = "status";
+          errors.index = index;
           noFaultYet = false;
         }
 
         if (noFaultYet && !Validator.isURL(item.link)) {
-          errors.items = "Handover item link is not a valid URL";
+          errors.handoverItems = "Handover item link is not a valid URL";
+          errors.section = "link";
+          errors.index = index;
           noFaultYet = false;
         }
       });
