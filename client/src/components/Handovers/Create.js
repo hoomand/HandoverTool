@@ -63,7 +63,6 @@ class Create extends Component {
       handedOverTeam: this.state.handedOverTeam,
       items: this.state.items
     };
-    console.log(handoverData);
 
     this.props.createHandover(handoverData, this.props.history);
   };

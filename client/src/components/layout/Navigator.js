@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { logoutUser } from "../../redux/actions/authActions";
+import { logoutUser as logout } from "../../redux/actions/authActions";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -70,11 +70,14 @@ const styles = theme => ({
 class Navigator extends Component {
   onLogoutClick = e => {
     e.preventDefault();
-    this.props.logoutUser();
+    this.props.logout();
+
+    window.location.href = "/login";
   };
 
   render() {
-    const { classes, ...other } = this.props;
+    // eslint-disable-next-line no-unused-vars
+    const { classes, logout, ...other } = this.props;
     const { isAuthenticated } = this.props.auth;
 
     let links = [
@@ -193,10 +196,11 @@ class Navigator extends Component {
 
 Navigator.propTypes = {
   classes: PropTypes.object.isRequired,
-  logoutUser: PropTypes.func,
+  logout: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   user: PropTypes.object,
-  auth: PropTypes.object
+  auth: PropTypes.object,
+  history: PropTypes.object
 };
 
 const mapStateToProps = state => ({
@@ -205,5 +209,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { logoutUser }
+  { logout }
 )(withStyles(styles)(Navigator));
