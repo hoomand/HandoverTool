@@ -83,20 +83,27 @@ class Create extends Component {
                   error={errors.name}
                 />
               </Grid>
-
-              <Grid item xs={3}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Create
-                </Button>
-              </Grid>
             </Grid>
           </form>
         </Paper>
+        <Grid
+          container
+          spacing={3}
+          justify="flex-end"
+          style={{ paddingTop: 20 }}
+        >
+          <Grid item xs={3}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={e => this.onSubmit(e)}
+            >
+              Create
+            </Button>
+          </Grid>
+        </Grid>
       </Container>
     );
   }
