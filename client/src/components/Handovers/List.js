@@ -64,7 +64,15 @@ class List extends Component {
             {handovers.map(handover => (
               <TableRow key={handover.id}>
                 <TableCell component="th" scope="row">
-                  {handover.handingOverTeam}
+                  <Link
+                    component={ComponentLink}
+                    to={`/handovers/${handover.id}`}
+                    // to="/handovers/show"
+                    variant="inherit"
+                    color="inherit"
+                  >
+                    {handover.handingOverTeam}
+                  </Link>
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {handover.handedOverTeam}

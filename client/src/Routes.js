@@ -8,6 +8,7 @@ import { default as TeamsList } from "./components/Teams/List";
 import { default as TeamCreate } from "./components/Teams/Create";
 import { default as HandoversList } from "./components/Handovers/List";
 import { default as HandoverCreate } from "./components/Handovers/Create";
+import { default as HandoverShow } from "./components/Handovers/Show";
 
 class Routes extends Component {
   render() {
@@ -27,6 +28,7 @@ class Routes extends Component {
           />
         </Switch>
         <Route exact path="/handovers" component={HandoversList} />
+        <Route exact path="/handovers/:id" component={HandoverShow} />
       </React.Fragment>
     );
   }

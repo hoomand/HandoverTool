@@ -55,4 +55,13 @@ router.get("/", (req, res) => {
   });
 });
 
+// @route   GET api/handovers/:id
+// @desc    Get a handover with id
+// @access  Public
+router.get("/:handoverId", (req, res) => {
+  Handover.scan({ id: req.params.handoverId }).exec((err, handover) => {
+    res.json({ handover });
+  });
+});
+
 module.exports = router;
