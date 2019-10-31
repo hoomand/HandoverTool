@@ -21,6 +21,8 @@ class Routes extends Component {
         <Route exact path="/teams" component={TeamsList} />
         <Switch>
           <PrivateRoute exact path="/teams/create" component={TeamCreate} />
+        </Switch>
+        <Switch>
           <PrivateRoute
             exact
             path="/handovers/create"
@@ -28,7 +30,7 @@ class Routes extends Component {
           />
         </Switch>
         <Route exact path="/handovers" component={HandoversList} />
-        <Route exact path="/handovers/:id" component={HandoverShow} />
+        <Route exact path="/handovers/show/:id" component={HandoverShow} />
       </React.Fragment>
     );
   }

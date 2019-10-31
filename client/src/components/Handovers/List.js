@@ -67,7 +67,7 @@ class List extends Component {
                   <TableCell component="th" scope="row">
                     <Link
                       component={ComponentLink}
-                      to={`/handovers/${handover.id}`}
+                      to={`/handovers/show/${handover.id}`}
                       // to="/handovers/show"
                       variant="inherit"
                       color="inherit"

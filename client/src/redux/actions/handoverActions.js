@@ -6,6 +6,7 @@ import {
   GET_ERRORS,
   RESET_ERRORS
 } from "./types";
+import isEmpty from "../../utils/is-empty";
 
 export const createHandover = (handoverData, history) => dispatch => {
   dispatch({ type: RESET_ERRORS });
@@ -30,11 +31,16 @@ export const getHandover = handoverId => (dispatch, getState) => {
     dispatch(setHandoverLoading);
     axios
       .get(`/api/handovers/${handoverId}`)
-      .then(res =>
-        dispatch({ type: SET_HANDOVER, payload: res.data.handover[0] })
-      )
+      .then(res => {
+        const { handover } = res.data;
+        if (!isEmpty(handover)) {
+          dispatch({ type: SET_HANDOVER, payload: res.data.handover[0] });
+        } else {
+          dispatch({ type: GET_ERRORS, payload: "no handover found" });
+        }
+      })
 
-      .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+      .catch(err => dispatch({ type: GET_ERRORS, payload: err.response }));
   }
 };
 
