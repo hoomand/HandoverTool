@@ -61,34 +61,36 @@ class List extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {handovers.map(handover => (
-              <TableRow key={handover.id}>
-                <TableCell component="th" scope="row">
-                  <Link
-                    component={ComponentLink}
-                    to={`/handovers/${handover.id}`}
-                    // to="/handovers/show"
-                    variant="inherit"
-                    color="inherit"
-                  >
-                    {handover.handingOverTeam}
-                  </Link>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {handover.handedOverTeam}
-                </TableCell>
+            {Object.values(handovers).map(handover => {
+              return (
+                <TableRow key={handover.id}>
+                  <TableCell component="th" scope="row">
+                    <Link
+                      component={ComponentLink}
+                      to={`/handovers/${handover.id}`}
+                      // to="/handovers/show"
+                      variant="inherit"
+                      color="inherit"
+                    >
+                      {handover.handingOverTeam}
+                    </Link>
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {handover.handedOverTeam}
+                  </TableCell>
 
-                <TableCell align="right">{handover.userAlias}</TableCell>
-                <TableCell align="right">{handover.items.length}</TableCell>
+                  <TableCell align="right">{handover.userAlias}</TableCell>
+                  <TableCell align="right">{handover.items.length}</TableCell>
 
-                <TableCell align="right">
-                  {moment(handover.entryDate).format("YYYY-MM-DD HH:mm:ss")}
-                </TableCell>
-                <TableCell align="right">
-                  {moment(handover.updated_at).format("YYYY-MM-DD HH:mm:ss")}
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell align="right">
+                    {moment(handover.entryDate).format("YYYY-MM-DD HH:mm:ss")}
+                  </TableCell>
+                  <TableCell align="right">
+                    {moment(handover.updated_at).format("YYYY-MM-DD HH:mm:ss")}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       );

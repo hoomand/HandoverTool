@@ -1,7 +1,11 @@
-import { HANDOVER_LOADING, SET_HANDOVERS } from "../actions/types";
+import {
+  HANDOVER_LOADING,
+  SET_HANDOVERS,
+} from "../actions/types";
+import { convertArrayToHash } from "../../utils/Utils";
 
 const initialState = {
-  data: [],
+  data: {},
   loading: false
 };
 
@@ -13,6 +17,10 @@ export default function(state = initialState, action) {
         loading: true
       };
     case SET_HANDOVERS:
+      return {
+        data: convertArrayToHash(action.payload, "id"),
+        loading: false
+      };
       return {
         ...state,
         data: action.payload,
