@@ -1,6 +1,7 @@
 import {
   HANDOVER_LOADING,
   SET_HANDOVERS,
+  SET_HANDOVER
 } from "../actions/types";
 import { convertArrayToHash } from "../../utils/Utils";
 
@@ -21,11 +22,16 @@ export default function(state = initialState, action) {
         data: convertArrayToHash(action.payload, "id"),
         loading: false
       };
+    case SET_HANDOVER:
+      // eslint-disable-next-line no-case-declarations
+      const { data } = state;
+      data[action.payload.id] = action.payload;
       return {
         ...state,
-        data: action.payload,
+        data: data,
         loading: false
       };
+
     default:
       return state;
   }
