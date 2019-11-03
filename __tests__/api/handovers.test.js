@@ -22,23 +22,23 @@ const test_teams = [{ name: "handover_team_1" }, { name: "handover_team_2" }];
 const test_items = [
   {
     status: "fresh",
-    link: "http://blahblah.com",
-    description: "oh lala"
+    link: "http://one.com",
+    description: "description 1"
   },
   {
     status: "investigated",
-    link: "http://blahblah.com",
-    description: "oh lala"
+    link: "http://two.com",
+    description: "description 2"
   },
   {
     status: "diagnosed",
-    link: "http://blahblah.com",
-    description: "oh lala"
+    link: "http://three.com",
+    description: "description 3"
   },
   {
     status: "monitor",
-    link: "http://blahblah.com",
-    description: "oh lala"
+    link: "http://four.com",
+    description: "description 4"
   }
 ];
 
@@ -350,5 +350,13 @@ describe("POST /api/handovers", () => {
       });
 
     expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        userAlias: test_user1.alias,
+        handingOverTeam: test_teams[0].name,
+        handedOverTeam: test_teams[1].name,
+        items: test_items
+      })
+    );
   });
 });

@@ -30,7 +30,7 @@ const handoverSchema = new Schema(
       type: "list",
       list: [
         {
-          action: String,
+          status: String,
           link: String,
           description: String
         }
