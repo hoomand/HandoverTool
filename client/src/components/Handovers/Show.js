@@ -23,42 +23,30 @@ class Show extends Component {
     this.props.setHeaderTitle("Handovers - Show");
     this.props.getHandover(handoverId);
   }
-  dataDisplay = (handovers, id) => {
+  dataDisplay = (handovers, id, classes) => {
     if (handovers.length !== 0 && handovers[id]) {
       const handover = handovers[id];
       return (
-        <Grid
-          container
-          spacing={3}
-          padding={2}
-          justify="center"
-          style={{ paddingTop: 20, paddingLeft: 20 }}
-        >
-          <Grid item xs={3}>
-            <strong>Handing Over Team:</strong>
-          </Grid>
-          <Grid item xs={3}>
-            {handover.handingOverTeam}
-          </Grid>
+        <Grid container style={{ marginTop: 10 }}>
+          <Paper className={classes.paper} style={{ width: "100%" }}>
+            <Grid container style={{ textAlign: "center", padding: "20px" }}>
+              <Grid item xs={3}>
+                <strong>Handing Over Team:</strong>
+              </Grid>
+              <Grid item xs={3}>
+                {handover.handingOverTeam}
+              </Grid>
 
-          <Grid item xs={3}>
-            <strong>Handed Over Team:</strong>
-          </Grid>
-          <Grid item xs={3}>
-            {handover.handedOverTeam}
-          </Grid>
-          <Grid item xs={10}>
-            <AppBar position="static" color="default" elevation={0}>
-              <Toolbar>
-                <Grid container alignItems="center">
-                  <Grid item xs={12}>
-                    <strong>Items</strong>
-                  </Grid>
-                </Grid>
-              </Toolbar>
-            </AppBar>
-
-            <Grid container spacing={15}>
+              <Grid item xs={3}>
+                <strong>Handed Over Team:</strong>
+              </Grid>
+              <Grid item xs={3}>
+                {handover.handedOverTeam}
+              </Grid>
+            </Grid>
+          </Paper>
+          <Grid item xs={12}>
+            <Grid container>
               {handover.items.map((item, index) => {
                 const { userAlias, entryDate } = handover;
                 return (
@@ -89,13 +77,13 @@ class Show extends Component {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs>
-                  Handover
+                  <strong>Handover</strong>
                 </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
-          {this.dataDisplay(handovers.data, id)}
         </Paper>
+        <Grid container>{this.dataDisplay(handovers.data, id, classes)}</Grid>
       </Container>
     );
   }
