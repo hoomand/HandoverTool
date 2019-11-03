@@ -1,3 +1,5 @@
+import { red } from "@material-ui/core/colors";
+
 export const generateStyles = (theme, drawerWidth) => {
   return {
     root: {
@@ -46,6 +48,13 @@ export const listStyles = theme => ({
   },
   contentWrapper: {
     margin: "40px 16px"
+  },
+  card: {
+    width: "100%",
+    marginTop: 10
+  },
+  avatar: {
+    backgroundColor: red[500]
   }
 });
 

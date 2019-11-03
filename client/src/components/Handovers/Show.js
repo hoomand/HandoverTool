@@ -11,6 +11,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 
+import moment from "moment";
+import HandoverItem from "./HandoverItem";
+
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getHandover } from "../../redux/actions/handoverActions";
 
@@ -55,13 +58,18 @@ class Show extends Component {
               </Toolbar>
             </AppBar>
 
-            <Grid container style={{ textAlign: "right" }}>
+            <Grid container spacing={15}>
               {handover.items.map((item, index) => {
+                const { userAlias, entryDate } = handover;
                 return (
                   <React.Fragment key={index}>
-                    <Grid item xs={12}>
-                      {item.link}
-                    </Grid>
+                    <HandoverItem
+                      value={item}
+                      title={userAlias}
+                      subheader={moment(entryDate).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                    />
                   </React.Fragment>
                 );
               })}
@@ -86,7 +94,7 @@ class Show extends Component {
               </Grid>
             </Toolbar>
           </AppBar>
-          {this.dataDisplay(handovers.data, id, classes)}
+          {this.dataDisplay(handovers.data, id)}
         </Paper>
       </Container>
     );
