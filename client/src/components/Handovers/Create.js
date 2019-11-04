@@ -83,7 +83,6 @@ class Create extends Component {
   };
 
   _removeItem = index => {
-    console.log(`removing item with index ${index}`);
     const newItems = this.state.items;
     newItems.splice(index, 1);
     this.setState({ items: newItems });

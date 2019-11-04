@@ -14,7 +14,7 @@ export const getTeams = () => dispatch => {
     .get("/api/teams")
     .then(res => dispatch({ type: SET_TEAMS, payload: res.data.teams }))
     .catch(err => {
-      console.log(err);
+      dispatch({ type: GET_ERRORS, payload: err.response.data });
       dispatch({ type: SET_TEAMS, payload: {} });
     });
 };

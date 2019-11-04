@@ -67,8 +67,6 @@ class Register extends Component {
       password: this.state.password
     };
 
-    console.log(newUser);
-
     // The second parameter allows us to redirect from within action
     // We also need to wrap the component in withRouter (last line of this file)
     this.props.registerUser(newUser, this.props.history);
