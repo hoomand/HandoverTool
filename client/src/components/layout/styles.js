@@ -55,6 +55,12 @@ export const listStyles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  badePadding: {
+    padding: theme.spacing(0, 2)
+  },
+  badeMargin: {
+    margin: theme.spacing(2)
   }
 });
 

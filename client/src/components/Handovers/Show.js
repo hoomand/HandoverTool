@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
+import Badge from "@material-ui/core/Badge";
 
 import moment from "moment";
 import HandoverItem from "./HandoverItem";
@@ -23,6 +24,11 @@ class Show extends Component {
     this.props.setHeaderTitle("Handovers - Show");
     this.props.getHandover(handoverId);
   }
+
+  _itemsBadgeColor = length => {
+    return length < 5 ? "primary" : "secondary";
+  };
+
   dataDisplay = (handovers, id, classes) => {
     if (handovers.length !== 0 && handovers[id]) {
       const handover = handovers[id];
@@ -46,6 +52,24 @@ class Show extends Component {
             </Grid>
           </Paper>
           <Grid item xs={12}>
+            <Paper className={classes.paper} style={{ marginTop: 10 }}>
+              <AppBar position="static" color="default" elevation={0}>
+                <Toolbar>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs>
+                      <Badge
+                        className={classes.badePadding}
+                        color={this._itemsBadgeColor(handover.items.length)}
+                        badgeContent={handover.items.length}
+                      >
+                        <strong>Items</strong>
+                      </Badge>
+                    </Grid>
+                  </Grid>
+                </Toolbar>
+              </AppBar>
+            </Paper>
+
             <Grid container>
               {handover.items.map((item, index) => {
                 const { userAlias, entryDate } = handover;
@@ -77,12 +101,13 @@ class Show extends Component {
             <Toolbar>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs>
-                  <strong>Handover</strong>
+                  <strong>Details</strong>
                 </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
         </Paper>
+
         <Grid container>{this.dataDisplay(handovers.data, id, classes)}</Grid>
       </Container>
     );
