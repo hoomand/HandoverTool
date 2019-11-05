@@ -89,6 +89,16 @@ class Show extends Component {
           </Grid>
         </Grid>
       );
+    } else {
+      return (
+        <Grid container style={{ marginTop: 10 }}>
+          <Paper className={classes.paper} style={{ width: "100%" }}>
+            <Grid container style={{ textAlign: "center", padding: "20px" }}>
+              <Grid item>Handover item does not exist</Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      );
     }
   };
   render() {
