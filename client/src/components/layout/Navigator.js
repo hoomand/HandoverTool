@@ -75,6 +75,14 @@ class Navigator extends Component {
     window.location.href = "/login";
   };
 
+  isHeaderActive(title) {
+    const headerTitle = this.props.header.headerTitle.toLowerCase();
+    if (headerTitle.startsWith(title)) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
     // eslint-disable-next-line no-unused-vars
     const { classes, logout, ...other } = this.props;
@@ -87,18 +95,33 @@ class Navigator extends Component {
           {
             id: "Handovers",
             url: "/handovers",
-            icon: <HomeIcon />,
-            active: true
+            icon: <HomeIcon />
           }
         ]
       },
       {
         id: "Admin Area",
         children: [
-          { id: "Analytics", url: "/", icon: <SettingsIcon /> },
-          { id: "Performance", url: "/", icon: <TimerIcon /> },
-          { id: "Users", url: "/users", icon: <PeopleIcon /> },
-          { id: "Teams", url: "/teams", icon: <PeopleIcon /> }
+          {
+            id: "Analytics",
+            url: "/",
+            icon: <SettingsIcon />
+          },
+          {
+            id: "Performance",
+            url: "/",
+            icon: <TimerIcon />
+          },
+          {
+            id: "Users",
+            url: "/users",
+            icon: <PeopleIcon />
+          },
+          {
+            id: "Teams",
+            url: "/teams",
+            icon: <PeopleIcon />
+          }
         ]
       }
     ];
@@ -106,8 +129,16 @@ class Navigator extends Component {
     const guestLinks = {
       id: "Authentication",
       children: [
-        { id: "Login", url: "/login", icon: <VpnKey /> },
-        { id: "Register", url: "/register", icon: <PersonAdd /> }
+        {
+          id: "Login",
+          url: "/login",
+          icon: <VpnKey />
+        },
+        {
+          id: "Register",
+          url: "/register",
+          icon: <PersonAdd />
+        }
       ]
     };
 
@@ -152,13 +183,14 @@ class Navigator extends Component {
                   {id}
                 </ListItemText>
               </ListItem>
-              {children.map(({ id: childId, url, icon, active, onClick }) => (
+              {children.map(({ id: childId, url, icon, onClick }) => (
                 <ListItem
                   key={childId}
                   button
                   className={clsx(
                     classes.item,
-                    active && classes.itemActiveItem
+                    this.isHeaderActive(childId.toLowerCase()) &&
+                      classes.itemActiveItem
                   )}
                 >
                   <ListItemIcon className={classes.itemIcon}>
@@ -200,11 +232,13 @@ Navigator.propTypes = {
   isAuthenticated: PropTypes.bool,
   user: PropTypes.object,
   auth: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
+  header: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  header: state.header
 });
 
 export default connect(
