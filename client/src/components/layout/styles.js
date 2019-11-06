@@ -70,9 +70,8 @@ export const selectStyles = theme => ({
     flexWrap: "wrap"
   },
   formControl: {
-    margin: theme.spacing(1),
     minWidth: 120,
-    width: "90%"
+    width: "100%"
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
