@@ -30,7 +30,6 @@ class Create extends Component {
     };
 
     this.props.createHandover(handoverData, this.props.history);
-    console.log(handoverData);
   };
 
   componentDidMount() {
@@ -68,7 +67,7 @@ Create.propTypes = {
   setHeaderTitle: PropTypes.func,
   classes: PropTypes.object,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.object,
   history: PropTypes.object,
   getTeams: PropTypes.func.isRequired,
   createHandover: PropTypes.func.isRequired,
