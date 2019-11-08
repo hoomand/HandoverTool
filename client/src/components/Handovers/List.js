@@ -14,6 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import Table from "@material-ui/core/Table";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
@@ -33,10 +34,47 @@ const ComponentLink = React.forwardRef((props, ref) => (
 ));
 
 class List extends Component {
+  state = {
+    order: "desc",
+    orderBy: "entryDate"
+  };
   componentDidMount() {
     this.props.setHeaderTitle("Handovers");
     this.props.getHandovers();
   }
+
+  desc(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  stableSort(array, cmp) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = cmp(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map(el => el[0]);
+  }
+
+  getSorting(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => this.desc(a, b, orderBy)
+      : (a, b) => -this.desc(a, b, orderBy);
+  }
+
+  handleRequestSort = property => {
+    const isDesc =
+      this.state.orderBy === property && this.state.order === "desc";
+    this.setState({ order: isDesc ? "asc" : "desc" });
+    this.setState({ orderBy: property });
+  };
 
   dataDisplay = (handovers, classes) => {
     if (handovers.length === 0) {
@@ -48,27 +86,51 @@ class List extends Component {
         </div>
       );
     } else {
+      console.log(this.state);
+      const HEADERS = [
+        { key: "handingOverTeam", value: "From Team" },
+        { key: "handedOverTeam", value: "To Team" },
+        { key: "userAlias", value: "Operator" },
+        { key: "items", value: "items" },
+        { key: "entryDate", value: "Creation Date" },
+        { key: "updated_at", value: "Update Date" }
+      ];
       return (
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>From Team</TableCell>
-              <TableCell>To Team</TableCell>
-              <TableCell>Operator</TableCell>
-              <TableCell>Items</TableCell>
-              <TableCell align="right">Creation Date</TableCell>
-              <TableCell align="right">Update Date</TableCell>
+              {HEADERS.map(header => {
+                const { key, value } = header;
+                return (
+                  <TableCell
+                    key={key}
+                    sortDirection={
+                      this.state.orderBy === key ? this.state.order : false
+                    }
+                  >
+                    <TableSortLabel
+                      active={this.state.orderBy === key}
+                      direction={this.state.order}
+                      onClick={() => this.handleRequestSort(key)}
+                    >
+                      {value}
+                    </TableSortLabel>
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.values(handovers).map(handover => {
+            {this.stableSort(
+              Object.values(handovers),
+              this.getSorting(this.state.order, this.state.orderBy)
+            ).map(handover => {
               return (
                 <TableRow key={handover.id}>
                   <TableCell component="th" scope="row">
                     <Link
                       component={ComponentLink}
                       to={`/handovers/show/${handover.id}`}
-                      // to="/handovers/show"
                       variant="inherit"
                       color="inherit"
                     >
@@ -79,13 +141,13 @@ class List extends Component {
                     {handover.handedOverTeam}
                   </TableCell>
 
-                  <TableCell align="right">{handover.userAlias}</TableCell>
-                  <TableCell align="right">{handover.items.length}</TableCell>
+                  <TableCell>{handover.userAlias}</TableCell>
+                  <TableCell>{handover.items.length}</TableCell>
 
-                  <TableCell align="right">
+                  <TableCell>
                     {moment(handover.entryDate).format("YYYY-MM-DD HH:mm:ss")}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     {moment(handover.updated_at).format("YYYY-MM-DD HH:mm:ss")}
                   </TableCell>
                 </TableRow>
