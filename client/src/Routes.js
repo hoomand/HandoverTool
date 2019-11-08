@@ -14,7 +14,7 @@ class Routes extends Component {
   render() {
     return (
       <React.Fragment>
-        <Route exact path="/" component={UsersList} />
+        <Route exact path="/" component={HandoversList} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/users" component={UsersList} />
