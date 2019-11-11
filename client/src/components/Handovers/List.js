@@ -20,7 +20,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
-// import TablePaginationActions from "../common/TablePaginationActions";
 
 import moment from "moment";
 import { connect } from "react-redux";
@@ -40,12 +39,17 @@ class List extends Component {
     order: "desc",
     orderBy: "entryDate",
     page: 0,
-    rowsPerPage: 10
+    rowsPerPage: 10,
+    searchInput: ""
   };
   componentDidMount() {
     this.props.setHeaderTitle("Handovers");
     this.props.getHandovers();
   }
+
+  onSearchInput = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   handleChangePage = (_event, newPage) => {
     this.setState({ page: newPage });
@@ -88,6 +92,32 @@ class List extends Component {
     this.setState({ orderBy: property });
   };
 
+  filteredHandovers = allHandovers => {
+    const filteredHandovers = [];
+    const searchInput = this.state.searchInput.toLocaleLowerCase();
+    for (let handover in allHandovers) {
+      const {
+        handingOverTeam,
+        handedOverTeam,
+        userAlias,
+        items,
+        entryDate,
+        updated_at
+      } = allHandovers[handover];
+      if (
+        handingOverTeam.toLocaleLowerCase().includes(searchInput) ||
+        handedOverTeam.toLocaleLowerCase().includes(searchInput) ||
+        userAlias.toLocaleLowerCase().includes(searchInput) ||
+        items.length.toString() === searchInput ||
+        moment(entryDate).format("YYYY-MM-DD") === searchInput ||
+        moment(updated_at).format("YYYY-MM-DD") === searchInput
+      ) {
+        filteredHandovers.push(allHandovers[handover]);
+      }
+    }
+    return filteredHandovers;
+  };
+
   dataDisplay = (handovers, classes) => {
     const { page, rowsPerPage } = this.state;
     if (handovers.length === 0) {
@@ -107,6 +137,9 @@ class List extends Component {
         { key: "entryDate", value: "Creation Date" },
         { key: "updated_at", value: "Update Date" }
       ];
+      const filteredHandovers = this.filteredHandovers(
+        Object.values(handovers)
+      );
       return (
         <div>
           <Table className={classes.table}>
@@ -135,7 +168,7 @@ class List extends Component {
             </TableHead>
             <TableBody>
               {this.stableSort(
-                Object.values(handovers),
+                filteredHandovers,
                 this.getSorting(this.state.order, this.state.orderBy)
               )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -177,7 +210,7 @@ class List extends Component {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
-            count={Object.values(handovers).length}
+            count={filteredHandovers.length}
             rowsPerPage={this.state.rowsPerPage}
             page={this.state.page}
             backIconButtonProps={{
@@ -213,11 +246,13 @@ class List extends Component {
               <Grid item xs>
                 <TextField
                   fullWidth
+                  name="searchInput"
                   placeholder="Search by team name, alias, number of handovers"
                   InputProps={{
                     disableUnderline: true,
                     className: classes.searchInput
                   }}
+                  onChange={this.onSearchInput}
                 />
               </Grid>
               <Grid item>
