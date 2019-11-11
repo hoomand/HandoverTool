@@ -19,6 +19,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TablePagination from "@material-ui/core/TablePagination";
+// import TablePaginationActions from "../common/TablePaginationActions";
 
 import moment from "moment";
 import { connect } from "react-redux";
@@ -36,12 +38,22 @@ const ComponentLink = React.forwardRef((props, ref) => (
 class List extends Component {
   state = {
     order: "desc",
-    orderBy: "entryDate"
+    orderBy: "entryDate",
+    page: 0,
+    rowsPerPage: 10
   };
   componentDidMount() {
     this.props.setHeaderTitle("Handovers");
     this.props.getHandovers();
   }
+
+  handleChangePage = (_event, newPage) => {
+    this.setState({ page: newPage });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
+  };
 
   desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -77,6 +89,7 @@ class List extends Component {
   };
 
   dataDisplay = (handovers, classes) => {
+    const { page, rowsPerPage } = this.state;
     if (handovers.length === 0) {
       return (
         <div className={classes.contentWrapper}>
@@ -86,7 +99,6 @@ class List extends Component {
         </div>
       );
     } else {
-      console.log(this.state);
       const HEADERS = [
         { key: "handingOverTeam", value: "From Team" },
         { key: "handedOverTeam", value: "To Team" },
@@ -96,65 +108,88 @@ class List extends Component {
         { key: "updated_at", value: "Update Date" }
       ];
       return (
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              {HEADERS.map(header => {
-                const { key, value } = header;
-                return (
-                  <TableCell
-                    key={key}
-                    sortDirection={
-                      this.state.orderBy === key ? this.state.order : false
-                    }
-                  >
-                    <TableSortLabel
-                      active={this.state.orderBy === key}
-                      direction={this.state.order}
-                      onClick={() => this.handleRequestSort(key)}
+        <div>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                {HEADERS.map(header => {
+                  const { key, value } = header;
+                  return (
+                    <TableCell
+                      key={key}
+                      sortDirection={
+                        this.state.orderBy === key ? this.state.order : false
+                      }
                     >
-                      {value}
-                    </TableSortLabel>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.stableSort(
-              Object.values(handovers),
-              this.getSorting(this.state.order, this.state.orderBy)
-            ).map(handover => {
-              return (
-                <TableRow key={handover.id}>
-                  <TableCell component="th" scope="row">
-                    <Link
-                      component={ComponentLink}
-                      to={`/handovers/show/${handover.id}`}
-                      variant="inherit"
-                      color="inherit"
-                    >
-                      {handover.handingOverTeam}
-                    </Link>
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {handover.handedOverTeam}
-                  </TableCell>
+                      <TableSortLabel
+                        active={this.state.orderBy === key}
+                        direction={this.state.order}
+                        onClick={() => this.handleRequestSort(key)}
+                      >
+                        {value}
+                      </TableSortLabel>
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.stableSort(
+                Object.values(handovers),
+                this.getSorting(this.state.order, this.state.orderBy)
+              )
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map(handover => {
+                  return (
+                    <TableRow key={handover.id}>
+                      <TableCell component="th" scope="row">
+                        <Link
+                          component={ComponentLink}
+                          to={`/handovers/show/${handover.id}`}
+                          variant="inherit"
+                          color="inherit"
+                        >
+                          {handover.handingOverTeam}
+                        </Link>
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {handover.handedOverTeam}
+                      </TableCell>
 
-                  <TableCell>{handover.userAlias}</TableCell>
-                  <TableCell>{handover.items.length}</TableCell>
+                      <TableCell>{handover.userAlias}</TableCell>
+                      <TableCell>{handover.items.length}</TableCell>
 
-                  <TableCell>
-                    {moment(handover.entryDate).format("YYYY-MM-DD HH:mm:ss")}
-                  </TableCell>
-                  <TableCell>
-                    {moment(handover.updated_at).format("YYYY-MM-DD HH:mm:ss")}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                      <TableCell>
+                        {moment(handover.entryDate).format(
+                          "YYYY-MM-DD HH:mm:ss"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {moment(handover.updated_at).format(
+                          "YYYY-MM-DD HH:mm:ss"
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            component="div"
+            count={Object.values(handovers).length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            backIconButtonProps={{
+              "aria-label": "previous page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "next page"
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        </div>
       );
     }
   };
