@@ -8,5 +8,6 @@ module.exports = {
       monitor: "diagnosed actions were performed, only monitor to verify"
     },
     mustBeValidURL: true
-  }
+  },
+  adminUsers: ["admin", "bijan"]
 };

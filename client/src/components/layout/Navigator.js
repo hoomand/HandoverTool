@@ -21,6 +21,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 
+import { getConfigs } from "../../redux/actions/configActions";
+
 /* eslint-disable react/display-name */
 const ComponentLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -68,6 +70,10 @@ const styles = theme => ({
 });
 
 class Navigator extends Component {
+  componentDidMount() {
+    this.props.getConfigs();
+  }
+
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logout();
@@ -85,8 +91,9 @@ class Navigator extends Component {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const { classes, logout, ...other } = this.props;
-    const { isAuthenticated } = this.props.auth;
+    const { classes, logout, getConfigs, configs, ...other } = this.props;
+    const { isAuthenticated, user } = this.props.auth;
+    const { adminUsers } = configs.data;
 
     let links = [
       {
@@ -96,31 +103,6 @@ class Navigator extends Component {
             id: "Handovers",
             url: "/handovers",
             icon: <HomeIcon />
-          }
-        ]
-      },
-      {
-        id: "Admin Area",
-        children: [
-          {
-            id: "Analytics",
-            url: "/",
-            icon: <SettingsIcon />
-          },
-          {
-            id: "Performance",
-            url: "/",
-            icon: <TimerIcon />
-          },
-          {
-            id: "Users",
-            url: "/users",
-            icon: <PeopleIcon />
-          },
-          {
-            id: "Teams",
-            url: "/teams",
-            icon: <PeopleIcon />
           }
         ]
       }
@@ -154,8 +136,37 @@ class Navigator extends Component {
       ]
     };
 
+    const adminLinks = {
+      id: "Admin Area",
+      children: [
+        {
+          id: "Analytics",
+          url: "/",
+          icon: <SettingsIcon />
+        },
+        {
+          id: "Performance",
+          url: "/",
+          icon: <TimerIcon />
+        },
+        {
+          id: "Users",
+          url: "/users",
+          icon: <PeopleIcon />
+        },
+        {
+          id: "Teams",
+          url: "/teams",
+          icon: <PeopleIcon />
+        }
+      ]
+    };
+
     if (isAuthenticated) {
       links.unshift(authorizedLinks);
+      if (adminUsers && adminUsers.includes(user.alias)) {
+        links.push(adminLinks);
+      }
     } else {
       links.unshift(guestLinks);
     }
@@ -233,15 +244,18 @@ Navigator.propTypes = {
   user: PropTypes.object,
   auth: PropTypes.object,
   history: PropTypes.object,
-  header: PropTypes.object
+  header: PropTypes.object,
+  getConfigs: PropTypes.func,
+  configs: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  header: state.header
+  header: state.header,
+  configs: state.configs
 });
 
 export default connect(
   mapStateToProps,
-  { logout }
+  { getConfigs, logout }
 )(withStyles(styles)(Navigator));
