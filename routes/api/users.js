@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../../models/User");
+const Handover = require("../../models/Handover");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validateRegisterInput = require("../../validation/register");
@@ -92,6 +93,32 @@ router.get("/:alias", (req, res) => {
   User.scan({ alias: req.params.alias }).exec((err, users) => {
     const aliases = users.map(user => user.alias);
     res.json({ users: aliases.sort() });
+  });
+});
+
+// @route   GET /api/users/:alias/stats
+// @desc    Get user stats, number of handovers and handover items
+// @access  Public
+router.get("/:alias/stats", (req, res) => {
+  Handover.scan({ userAlias: req.params.alias }).exec((err, handovers) => {
+    let totalHandoverItems = 0;
+    let totalHandoverItemsTypes = {};
+    handovers.forEach(handover => {
+      totalHandoverItems += handover.items.length;
+
+      handover.items.forEach(item => {
+        if (totalHandoverItemsTypes[item.status]) {
+          totalHandoverItemsTypes[item.status] += 1;
+        } else {
+          totalHandoverItemsTypes[item.status] = 1;
+        }
+      });
+    });
+    res.json({
+      totalHandoverSessions: handovers.length,
+      totalHandoverItems: totalHandoverItems,
+      totalHandoverItemsTypes: totalHandoverItemsTypes
+    });
   });
 });
 
