@@ -20,6 +20,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import moment from "moment";
 import { connect } from "react-redux";
@@ -164,6 +165,7 @@ class List extends Component {
                     </TableCell>
                   );
                 })}
+                <TableCell>Details</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -174,16 +176,9 @@ class List extends Component {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(handover => {
                   return (
-                    <TableRow key={handover.id}>
+                    <TableRow key={handover.id} hover={true}>
                       <TableCell component="th" scope="row">
-                        <Link
-                          component={ComponentLink}
-                          to={`/handovers/show/${handover.id}`}
-                          variant="inherit"
-                          color="inherit"
-                        >
-                          {handover.handingOverTeam}
-                        </Link>
+                        {handover.handingOverTeam}
                       </TableCell>
                       <TableCell component="th" scope="row">
                         {handover.handedOverTeam}
@@ -201,6 +196,18 @@ class List extends Component {
                         {moment(handover.updated_at).format(
                           "YYYY-MM-DD HH:mm:ss"
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          component={ComponentLink}
+                          to={`/handovers/show/${handover.id}`}
+                          variant="inherit"
+                          color="inherit"
+                        >
+                          <IconButton>
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   );
