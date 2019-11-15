@@ -234,6 +234,24 @@ class List extends Component {
     }
   };
 
+  _newHandoverButton = classes => {
+    const { isAuthenticated } = this.props.auth;
+    if (isAuthenticated) {
+      return (
+        <Button variant="contained" color="primary" className={classes.addRow}>
+          <Link
+            component={ComponentLink}
+            to="/handovers/create"
+            variant="inherit"
+            color="inherit"
+          >
+            New Handover
+          </Link>
+        </Button>
+      );
+    }
+  };
+
   render() {
     const { classes, handovers } = this.props;
 
@@ -263,20 +281,7 @@ class List extends Component {
                 />
               </Grid>
               <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.addRow}
-                >
-                  <Link
-                    component={ComponentLink}
-                    to="/handovers/create"
-                    variant="inherit"
-                    color="inherit"
-                  >
-                    New Handover
-                  </Link>
-                </Button>
+                {this._newHandoverButton(classes)}
                 <Tooltip title="Reload">
                   <IconButton onClick={() => this.props.getHandovers()}>
                     <RefreshIcon className={classes.block} color="inherit" />
@@ -296,11 +301,13 @@ List.propTypes = {
   classes: PropTypes.object.isRequired,
   setHeaderTitle: PropTypes.func,
   getHandovers: PropTypes.func.isRequired,
-  handovers: PropTypes.object.isRequired
+  handovers: PropTypes.object.isRequired,
+  auth: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  handovers: state.handovers
+  handovers: state.handovers,
+  auth: state.auth
 });
 
 export default connect(
