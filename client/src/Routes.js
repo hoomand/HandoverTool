@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import { default as UserStatsWrapper } from "./components/Users/UserStatsWrapper";
 import { default as UsersList } from "./components/Users/List";
 import { default as TeamsList } from "./components/Teams/List";
 import { default as TeamCreate } from "./components/Teams/Create";
@@ -26,6 +27,11 @@ class Routes extends Component {
       return (
         <React.Fragment>
           <Route exact path="/teams/create" component={TeamCreate} />
+          <Route
+            exact
+            path="/users/:alias/stats"
+            component={UserStatsWrapper}
+          />
         </React.Fragment>
       );
     }
