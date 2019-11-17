@@ -29,6 +29,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getHandovers } from "../../redux/actions/handoverActions";
+import { getConfigs } from "../../redux/actions/configActions";
 
 /* eslint-disable react/display-name */
 const ComponentLink = React.forwardRef((props, ref) => (
@@ -44,6 +45,7 @@ class List extends Component {
     searchInput: ""
   };
   componentDidMount() {
+    this.props.getConfigs();
     this.props.setHeaderTitle("Handovers");
     this.props.getHandovers();
   }
@@ -119,6 +121,27 @@ class List extends Component {
     return filteredHandovers;
   };
 
+  showUser = userAlias => {
+    const { configs } = this.props;
+    const { isAuthenticated, user } = this.props.auth;
+    const { adminUsers } = configs.data;
+
+    if (isAuthenticated && adminUsers && adminUsers.includes(user.alias)) {
+      return (
+        <Link
+          component={ComponentLink}
+          to={`/users/${userAlias}/stats`}
+          variant="inherit"
+          color="inherit"
+        >
+          {userAlias}
+        </Link>
+      );
+    } else {
+      return userAlias;
+    }
+  };
+
   dataDisplay = (handovers, classes) => {
     const { page, rowsPerPage } = this.state;
     if (handovers.length === 0) {
@@ -184,7 +207,7 @@ class List extends Component {
                         {handover.handedOverTeam}
                       </TableCell>
 
-                      <TableCell>{handover.userAlias}</TableCell>
+                      <TableCell>{this.showUser(handover.userAlias)}</TableCell>
                       <TableCell>{handover.items.length}</TableCell>
 
                       <TableCell>
@@ -302,15 +325,20 @@ List.propTypes = {
   setHeaderTitle: PropTypes.func,
   getHandovers: PropTypes.func.isRequired,
   handovers: PropTypes.object.isRequired,
+  getConfigs: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+  configs: PropTypes.object,
   auth: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   handovers: state.handovers,
-  auth: state.auth
+  auth: state.auth,
+  configs: state.configs
 });
 
 export default connect(
   mapStateToProps,
-  { setHeaderTitle, getHandovers }
+  { setHeaderTitle, getHandovers, getConfigs }
 )(withStyles(listStyles)(List));
