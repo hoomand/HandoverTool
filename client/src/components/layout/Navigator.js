@@ -13,7 +13,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
 import TimerIcon from "@material-ui/icons/Timer";
-import SettingsIcon from "@material-ui/icons/Settings";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import VpnKey from "@material-ui/icons/VpnKey";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -141,12 +140,7 @@ class Navigator extends Component {
       children: [
         {
           id: "Analytics",
-          url: "/",
-          icon: <SettingsIcon />
-        },
-        {
-          id: "Performance",
-          url: "/",
+          url: "/analytics",
           icon: <TimerIcon />
         },
         {

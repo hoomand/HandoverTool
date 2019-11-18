@@ -10,6 +10,7 @@ import { default as TeamCreate } from "./components/Teams/Create";
 import { default as HandoversList } from "./components/Handovers/List";
 import { default as HandoverCreate } from "./components/Handovers/Create";
 import { default as HandoverShow } from "./components/Handovers/Show";
+import { default as Analytics } from "./components/Analytics/Analytics";
 
 import { connect } from "react-redux";
 import { getConfigs } from "./redux/actions/configActions";
@@ -32,6 +33,7 @@ class Routes extends Component {
             path="/users/:alias/stats"
             component={UserStatsWrapper}
           />
+          <Route exact path="/analytics" component={Analytics} />
         </React.Fragment>
       );
     }
