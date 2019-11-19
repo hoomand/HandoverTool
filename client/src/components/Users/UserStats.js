@@ -23,12 +23,24 @@ class UserStats extends Component {
       totalHandoverItemsTypes: {}
     }
   };
-  async componentDidMount() {
-    const { alias } = this.props;
+
+  async getStats(alias) {
     this.setState({ alias: alias });
     const response = await axios.get(`/api/users/${alias}/stats`);
     this.setState({ stats: response.data });
   }
+
+  componentDidMount() {
+    const { alias } = this.props;
+    this.getStats(alias);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.alias !== prevProps.alias) {
+      this.getStats(this.props.alias);
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { alias, stats } = this.state;
@@ -122,7 +134,7 @@ class UserStats extends Component {
 
 UserStats.propTypes = {
   classes: PropTypes.object,
-  alias: PropTypes.string
+  alias: PropTypes.string.isRequired
 };
 
 export default withStyles(listStyles)(UserStats);
