@@ -49,10 +49,11 @@ class UsersCombo extends Component {
   };
 
   onChange = selectedUser => {
-    this.setState({ selectedUser: selectedUser.value });
+    const user = selectedUser === null ? "" : selectedUser.value;
+    this.setState({ selectedUser: user });
     const { onUserChange } = this.props;
     if (onUserChange) {
-      onUserChange(selectedUser.value);
+      onUserChange(user);
     }
   };
 

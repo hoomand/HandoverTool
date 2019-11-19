@@ -39,7 +39,7 @@ class Analytics extends Component {
               <Toolbar>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs>
-                    Select a user alias first
+                    Please select a user alias first
                   </Grid>
                 </Grid>
               </Toolbar>
