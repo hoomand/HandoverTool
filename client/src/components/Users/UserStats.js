@@ -46,7 +46,10 @@ class UserStats extends Component {
     if (totalHandoverSessions === null || totalHandoverItems === null) {
       return "-";
     } else {
-      const ratio = totalHandoverItems / totalHandoverSessions;
+      const ratio =
+        totalHandoverItems === 0
+          ? 0
+          : totalHandoverItems / totalHandoverSessions;
       const color = ratio > 5 ? "red" : "green";
       return <span style={{ color: color }}>{ratio.toString()}</span>;
     }
