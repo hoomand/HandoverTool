@@ -41,6 +41,17 @@ class UserStats extends Component {
     }
   }
 
+  _handoverItemsToOncallSessionsRatio() {
+    const { totalHandoverSessions, totalHandoverItems } = this.state.stats;
+    if (totalHandoverSessions === null || totalHandoverItems === null) {
+      return "-";
+    } else {
+      const ratio = totalHandoverItems / totalHandoverSessions;
+      const color = ratio > 5 ? "red" : "green";
+      return <span style={{ color: color }}>{ratio.toString()}</span>;
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { alias, stats } = this.state;
@@ -69,6 +80,19 @@ class UserStats extends Component {
             </Toolbar>
           </AppBar>
         </Paper>
+
+        <Grid container style={{ marginTop: 10 }}>
+          <Paper className={classes.paper} style={{ width: "100%" }}>
+            <Grid container style={{ padding: "20px" }}>
+              <Grid item xs={5} style={{ paddingBottom: "10px" }}>
+                Handover Ratio
+              </Grid>
+              <Grid item xs={7}>
+                {this._handoverItemsToOncallSessionsRatio()}
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
 
         <Grid container style={{ marginTop: 10 }}>
           <Paper className={classes.paper} style={{ width: "100%" }}>
