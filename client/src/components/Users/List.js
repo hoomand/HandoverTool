@@ -23,8 +23,16 @@ import TablePagination from "@material-ui/core/TablePagination";
 import moment from "moment";
 
 import { connect } from "react-redux";
+import { Link } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
 import { setHeaderTitle } from "../../redux/actions/headerActions";
 import { getUsers } from "../../redux/actions/userActions";
+import { getConfigs } from "../../redux/actions/configActions";
+
+/* eslint-disable react/display-name */
+const ComponentLink = React.forwardRef((props, ref) => (
+  <RouterLink innerRef={ref} {...props} />
+));
 
 class List extends Component {
   state = {
@@ -36,6 +44,7 @@ class List extends Component {
   };
 
   componentDidMount() {
+    this.props.getConfigs();
     this.props.setHeaderTitle("Users");
     this.props.getUsers();
   }
@@ -101,6 +110,27 @@ class List extends Component {
     return filteredUsers;
   };
 
+  showUser = userAlias => {
+    const { configs } = this.props;
+    const { isAuthenticated, user } = this.props.auth;
+    const { adminUsers } = configs.data;
+
+    if (isAuthenticated && adminUsers && adminUsers.includes(user.alias)) {
+      return (
+        <Link
+          component={ComponentLink}
+          to={`/users/${userAlias}/stats`}
+          variant="inherit"
+          color="inherit"
+        >
+          {userAlias}
+        </Link>
+      );
+    } else {
+      return userAlias;
+    }
+  };
+
   dataDisplay = (users, classes) => {
     const { page, rowsPerPage } = this.state;
     if (users.length === 0) {
@@ -154,7 +184,7 @@ class List extends Component {
                   return (
                     <TableRow key={user.alias}>
                       <TableCell component="th" scope="row">
-                        {user.alias}
+                        {this.showUser(user.alias)}
                       </TableCell>
                       <TableCell>
                         {moment(user.entryDate).format("YYYY-MM-DD HH:mm:ss")}
@@ -235,14 +265,20 @@ List.propTypes = {
   classes: PropTypes.object.isRequired,
   setHeaderTitle: PropTypes.func,
   getUsers: PropTypes.func.isRequired,
-  users: PropTypes.object.isRequired
+  getConfigs: PropTypes.func,
+  users: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool,
+  configs: PropTypes.object,
+  auth: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  users: state.users
+  users: state.users,
+  auth: state.auth,
+  configs: state.configs
 });
 
 export default connect(
   mapStateToProps,
-  { setHeaderTitle, getUsers }
+  { setHeaderTitle, getUsers, getConfigs }
 )(withStyles(listStyles)(List));
