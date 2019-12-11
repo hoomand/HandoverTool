@@ -17,6 +17,8 @@ let test_user1 = {
   token: ""
 };
 
+jest.setTimeout(30000);
+
 const test_teams = [{ name: "handover_team_1" }, { name: "handover_team_2" }];
 
 const test_items = [

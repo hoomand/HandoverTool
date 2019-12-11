@@ -5,6 +5,8 @@ const Team = require("../../models/Team");
 const { createUser, loginUser, createTeam } = require("../utils");
 const { randomText } = require("../../utils");
 
+jest.setTimeout(30000);
+
 let test_user1 = {
   alias: "team_test_user",
   password: randomText(10),

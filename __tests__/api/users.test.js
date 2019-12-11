@@ -5,6 +5,8 @@ const appConfigs = require("../../config/app");
 const { createUser, loginUser } = require("../utils");
 const { randomText } = require("../../utils");
 
+jest.setTimeout(30000);
+
 const test_user1 = {
   alias: "users_test_user",
   password: randomText(10)
