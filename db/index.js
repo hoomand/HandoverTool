@@ -1,7 +1,13 @@
 const client = require("dynamoose");
 const isEmpty = require("../validation/is-empty");
 
-const { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGION } = process.env;
+const {
+  NODE_ENV,
+  AWS_ACCESS_KEY,
+  AWS_SECRET_KEY,
+  AWS_REGION
+} = require("../config/environment");
+
 if (isEmpty(AWS_ACCESS_KEY) || isEmpty(AWS_SECRET_KEY) || isEmpty(AWS_REGION)) {
   console.error(
     "AWS environment variables must not be empty for production environment: AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_REGION "
@@ -15,8 +21,8 @@ client.AWS.config.update({
   region: AWS_REGION
 });
 
-console.log(`Dynamo running in ${process.env.NODE_ENV}`);
-switch (process.env.NODE_ENV) {
+console.log(`Dynamo running in ${NODE_ENV}`);
+switch (NODE_ENV) {
   case "test":
     client.setDefaults({
       create: true,

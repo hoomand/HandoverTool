@@ -50,6 +50,7 @@
     "validator": "^11.1.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-config-standard": "^14.1.0",
