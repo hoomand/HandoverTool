@@ -27,7 +27,7 @@
     "format:check": "prettier --list-different \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"**/*.{js,jsx}\" --quiet"
   },
-  "proxy": "http://server:5000",
+  "proxy": "http://api_server:5000",
   "eslintConfig": {
     "extends": "react-app"
   },
