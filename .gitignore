@@ -3,3 +3,7 @@
 node_modules/
 coverage/
 .vscode/
+
+# Fargate configs
+ecs-params.yml
+fargate-docker-compose.yml
