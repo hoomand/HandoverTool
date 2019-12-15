@@ -1,22 +1,35 @@
 version: "3"
 services:
-  frontend:
-    container_name: handovertool_web
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    image: hoomand/handovertool_web
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./client:/usr/src/app
-  backend:
-    container_name: handovertool_server
+  server:
     build:
       context: ./server
       dockerfile: Dockerfile
-    image: hoomand/handovertool_server
+    expose:
+      - ${APP_SERVER_PORT}
+    environment:
+      APP_SERVER_PORT: ${APP_SERVER_PORT}
+      NODE_ENV: ${NODE_ENV}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_REGION: ${AWS_REGION}
     ports:
-      - "5000:5000"
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
     volumes:
-      - ./server:/usr/src/app
+      - ./server:/usr/src/app/server
+    command: npm run server
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_PORT=${REACT_APP_PORT}
+    expose:
+      - ${REACT_APP_PORT}
+    ports:
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - ./client:/usr/src/app/client
+    links:
+      - server
+    command: npm run start
