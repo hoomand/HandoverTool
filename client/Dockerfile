@@ -1,13 +1,10 @@
-FROM node:10-alpine
-
-RUN mkdir -p /usr/src/app/client
-WORKDIR /usr/src/app/client
-
-COPY package*.json ./
+FROM node:10 AS build
+WORKDIR /srv
+ADD package.json .
 RUN npm install
 
-COPY . .
-
+FROM node:10-slim
+COPY --from=build /srv .
+ADD . .
 EXPOSE 3000
-
 CMD [ "npm", "start" ]
