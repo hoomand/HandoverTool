@@ -1,12 +1,13 @@
 version: "3"
+networks:
+  hot:
+
 services:
   server:
     container_name: api_server
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    expose:
-      - ${APP_SERVER_PORT}
+    networks:
+      - hot
+    build: ./server
     environment:
       APP_SERVER_PORT: ${APP_SERVER_PORT}
       NODE_ENV: ${NODE_ENV}
@@ -15,21 +16,12 @@ services:
       AWS_REGION: ${AWS_REGION}
     ports:
       - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
-    volumes:
-      - ./server:/usr/src/app/server
-    command: npm run server
 
   client:
-    container_name: react_client
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    networks:
+      - hot
+    build: ./client
     environment:
       - REACT_APP_PORT=${REACT_APP_PORT}
-    expose:
-      - ${REACT_APP_PORT}
     ports:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
-    volumes:
-      - ./client:/usr/src/app/client
-    command: npm run start
