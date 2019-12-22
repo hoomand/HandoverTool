@@ -4,7 +4,6 @@ networks:
 
 services:
   server:
-    container_name: api_server
     networks:
       - hot
     build: ./server
