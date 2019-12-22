@@ -8,4 +8,4 @@ COPY --from=build /srv .
 ADD . .
 EXPOSE 5000
 
-CMD [ "npm", "run", "server" ]
+CMD [ "npm", "run", "start" ]
