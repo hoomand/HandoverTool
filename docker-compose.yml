@@ -6,7 +6,9 @@ services:
   server:
     networks:
       - hot
-    build: ./server
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       APP_SERVER_PORT: ${APP_SERVER_PORT}
       NODE_ENV: ${NODE_ENV}
