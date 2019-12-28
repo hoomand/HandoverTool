@@ -15,9 +15,10 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
+    "client:build": "npm run build --prefix client",
     "client:format": "prettier --write \"client/src/**/*.{js,jsx}\"",
     "client:format:check": "prettier --list-different \"client/src/**/*.{js,jsx}\"",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "npm run client:build && concurrently \"npm run server\" \"npm run client\""
   },
   "author": "bijan hoomand",
   "license": "GPL-3.0-or-later",
