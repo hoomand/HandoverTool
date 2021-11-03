@@ -47,7 +47,7 @@
     "shortid": "^2.2.14",
     "starwars-names": "^1.6.0",
     "dotenv": "^8.2.0",
-    "validator": "^11.1.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
